@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImage from "@/assets/hero-students.jpg";
+import piLogo from "@/assets/pi-logo.png";
 import {
   Sparkles,
   Trophy,
@@ -43,9 +44,7 @@ function Nav() {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-hero text-primary-foreground shadow-soft">
-            <Sparkles className="h-5 w-5" />
-          </div>
+          <img src={piLogo} alt="Mathchines pi logo" width={36} height={36} className="h-9 w-9" />
           <span className="text-xl font-semibold tracking-tight">Mathchines</span>
         </a>
         <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
@@ -54,12 +53,12 @@ function Nav() {
           <a href="#personas" className="transition-colors hover:text-foreground">Who it's for</a>
           <a href="#pricing" className="transition-colors hover:text-foreground">Pricing</a>
         </div>
-        <a
-          href="#cta"
+        <Link
+          to="/learn"
           className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform hover:scale-105"
         >
-          Get early access <ArrowRight className="h-4 w-4" />
-        </a>
+          Start learning <ArrowRight className="h-4 w-4" />
+        </Link>
       </nav>
     </header>
   );
@@ -84,12 +83,12 @@ function Hero() {
             AI-powered tutoring, and gamified practice — on any device, with or without internet.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#cta"
+            <Link
+              to="/learn"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-hero px-6 py-3 font-medium text-primary-foreground shadow-glow transition-transform hover:scale-105"
             >
               Start learning free <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
             <a
               href="#how"
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-medium text-foreground transition-colors hover:bg-accent"
@@ -516,9 +515,7 @@ function Footer() {
     <footer className="border-t border-border bg-card py-12">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 sm:flex-row">
         <div className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-hero text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </div>
+          <img src={piLogo} alt="Mathchines pi logo" width={32} height={32} className="h-8 w-8" />
           <span className="font-semibold">Mathchines</span>
         </div>
         <p className="text-sm text-muted-foreground">
