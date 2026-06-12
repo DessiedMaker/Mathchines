@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { getTopic, type Difficulty, type Question } from "@/lib/curriculum";
+import { getTopic, type Difficulty, type Question, type Topic } from "@/lib/curriculum";
 import { addMastery } from "@/lib/progress";
 import { ArrowRight, Award, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
 
@@ -51,7 +51,7 @@ function pickAdaptive(pool: Question[], history: { difficulty: Difficulty; corre
 }
 
 function QuizPage() {
-  const { topic } = Route.useLoaderData();
+  const { topic } = Route.useLoaderData() as { topic: Topic };
   const navigate = useNavigate();
   const shuffled = useMemo(() => [...topic.questions].sort(() => Math.random() - 0.5), [topic]);
 

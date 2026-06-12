@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getTopic } from "@/lib/curriculum";
+import { getTopic, type Topic } from "@/lib/curriculum";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/learn/lesson/$topicId")({
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/learn/lesson/$topicId")({
 });
 
 function LessonPage() {
-  const { topic } = Route.useLoaderData();
+  const { topic } = Route.useLoaderData() as { topic: Topic };
 
   return (
     <div className="grid gap-10 lg:grid-cols-3">
