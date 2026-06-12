@@ -9,38 +9,108 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnTopicsRouteImport } from './routes/learn.topics'
+import { Route as LearnQuizTopicIdRouteImport } from './routes/learn.quiz.$topicId'
+import { Route as LearnLessonTopicIdRouteImport } from './routes/learn.lesson.$topicId'
 
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnTopicsRoute = LearnTopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnQuizTopicIdRoute = LearnQuizTopicIdRouteImport.update({
+  id: '/quiz/$topicId',
+  path: '/quiz/$topicId',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnLessonTopicIdRoute = LearnLessonTopicIdRouteImport.update({
+  id: '/lesson/$topicId',
+  path: '/lesson/$topicId',
+  getParentRoute: () => LearnRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/learn': typeof LearnRouteWithChildren
+  '/learn/topics': typeof LearnTopicsRoute
+  '/learn/': typeof LearnIndexRoute
+  '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
+  '/learn/quiz/$topicId': typeof LearnQuizTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/learn/topics': typeof LearnTopicsRoute
+  '/learn': typeof LearnIndexRoute
+  '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
+  '/learn/quiz/$topicId': typeof LearnQuizTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/learn': typeof LearnRouteWithChildren
+  '/learn/topics': typeof LearnTopicsRoute
+  '/learn/': typeof LearnIndexRoute
+  '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
+  '/learn/quiz/$topicId': typeof LearnQuizTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/learn'
+    | '/learn/topics'
+    | '/learn/'
+    | '/learn/lesson/$topicId'
+    | '/learn/quiz/$topicId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/learn/topics'
+    | '/learn'
+    | '/learn/lesson/$topicId'
+    | '/learn/quiz/$topicId'
+  id:
+    | '__root__'
+    | '/'
+    | '/learn'
+    | '/learn/topics'
+    | '/learn/'
+    | '/learn/lesson/$topicId'
+    | '/learn/quiz/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LearnRoute: typeof LearnRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +118,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/': {
+      id: '/learn/'
+      path: '/'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/topics': {
+      id: '/learn/topics'
+      path: '/topics'
+      fullPath: '/learn/topics'
+      preLoaderRoute: typeof LearnTopicsRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/quiz/$topicId': {
+      id: '/learn/quiz/$topicId'
+      path: '/quiz/$topicId'
+      fullPath: '/learn/quiz/$topicId'
+      preLoaderRoute: typeof LearnQuizTopicIdRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/lesson/$topicId': {
+      id: '/learn/lesson/$topicId'
+      path: '/lesson/$topicId'
+      fullPath: '/learn/lesson/$topicId'
+      preLoaderRoute: typeof LearnLessonTopicIdRouteImport
+      parentRoute: typeof LearnRoute
+    }
   }
 }
 
+interface LearnRouteChildren {
+  LearnTopicsRoute: typeof LearnTopicsRoute
+  LearnIndexRoute: typeof LearnIndexRoute
+  LearnLessonTopicIdRoute: typeof LearnLessonTopicIdRoute
+  LearnQuizTopicIdRoute: typeof LearnQuizTopicIdRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnTopicsRoute: LearnTopicsRoute,
+  LearnIndexRoute: LearnIndexRoute,
+  LearnLessonTopicIdRoute: LearnLessonTopicIdRoute,
+  LearnQuizTopicIdRoute: LearnQuizTopicIdRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LearnRoute: LearnRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
