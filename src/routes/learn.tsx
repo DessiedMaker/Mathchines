@@ -3,6 +3,7 @@ import { Sparkles, ArrowLeft, LogOut, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import piLogo from "@/assets/pi-logo.png";
 import { supabase } from "@/integrations/supabase/client";
+import { hydrateFromCloud, clearLocalProgress } from "@/lib/progress";
 import type { User } from "@supabase/supabase-js";
 
 export const Route = createFileRoute("/learn")({
@@ -15,15 +16,21 @@ function LearnLayout() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      if (!session) navigate({ to: "/auth" });
+      if (!session) {
+        clearLocalProgress();
+        navigate({ to: "/auth" });
+      } else if (event === "SIGNED_IN") {
+        void hydrateFromCloud(session.user.id);
+      }
     });
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!data.session) {
         navigate({ to: "/auth" });
       } else {
         setUser(data.session.user);
+        await hydrateFromCloud(data.session.user.id);
       }
       setChecking(false);
     });
@@ -31,6 +38,7 @@ function LearnLayout() {
   }, [navigate]);
 
   async function handleSignOut() {
+    clearLocalProgress();
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
