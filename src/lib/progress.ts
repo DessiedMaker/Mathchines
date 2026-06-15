@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 const KEY = "mathchines.progress.v1";
 
 export interface Progress {
@@ -10,6 +12,8 @@ export interface Progress {
 }
 
 const empty: Progress = { mastered: [], xp: 0, streak: 0 };
+
+let currentUserId: string | null = null;
 
 function read(): Progress {
   if (typeof window === "undefined") return { ...empty };
@@ -25,6 +29,50 @@ function read(): Progress {
 function write(p: Progress) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(KEY, JSON.stringify(p));
+  window.dispatchEvent(new CustomEvent("mathchines:progress"));
+  if (currentUserId) void syncToCloud(currentUserId, p);
+}
+
+async function syncToCloud(userId: string, p: Progress) {
+  await supabase
+    .from("profiles")
+    .update({
+      country: p.country ?? null,
+      grade: p.grade ?? null,
+      xp: p.xp,
+      streak: p.streak,
+      last_active_day: p.lastActiveDay ?? null,
+      mastered_topics: p.mastered,
+    })
+    .eq("id", userId);
+}
+
+export async function hydrateFromCloud(userId: string) {
+  currentUserId = userId;
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("country, grade, xp, streak, last_active_day, mastered_topics")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error || !data) return;
+  const p: Progress = {
+    country: data.country ?? undefined,
+    grade: data.grade ?? undefined,
+    xp: data.xp ?? 0,
+    streak: data.streak ?? 0,
+    lastActiveDay: data.last_active_day ?? undefined,
+    mastered: data.mastered_topics ?? [],
+  };
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(KEY, JSON.stringify(p));
+    window.dispatchEvent(new CustomEvent("mathchines:progress"));
+  }
+}
+
+export function clearLocalProgress() {
+  currentUserId = null;
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(KEY);
   window.dispatchEvent(new CustomEvent("mathchines:progress"));
 }
 

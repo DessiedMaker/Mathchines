@@ -22,7 +22,11 @@ export type Database = {
           display_name: string | null
           grade: string | null
           id: string
+          last_active_day: string | null
+          mastered_topics: string[]
+          streak: number
           updated_at: string
+          xp: number
         }
         Insert: {
           avatar_url?: string | null
@@ -31,7 +35,11 @@ export type Database = {
           display_name?: string | null
           grade?: string | null
           id: string
+          last_active_day?: string | null
+          mastered_topics?: string[]
+          streak?: number
           updated_at?: string
+          xp?: number
         }
         Update: {
           avatar_url?: string | null
@@ -40,7 +48,11 @@ export type Database = {
           display_name?: string | null
           grade?: string | null
           id?: string
+          last_active_day?: string | null
+          mastered_topics?: string[]
+          streak?: number
           updated_at?: string
+          xp?: number
         }
         Relationships: []
       }
