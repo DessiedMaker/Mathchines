@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { getTopic, type Difficulty, type Question, type Topic } from "@/lib/curriculum";
-import { addMastery } from "@/lib/progress";
-import { ArrowRight, Award, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
+import { addMastery, getProgress } from "@/lib/progress";
+import { ArrowRight, Award, CheckCircle2, RotateCcw, XCircle, Sparkles, Loader2 } from "lucide-react";
+import { getAIExplanation } from "@/lib/api/ai.functions";
+
 
 export const Route = createFileRoute("/learn/quiz/$topicId")({
   loader: ({ params }) => {
@@ -59,6 +61,9 @@ function QuizPage() {
   const [selected, setSelected] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [loadingAi, setLoadingAi] = useState(false);
+
 
   const pastForAdaptive = history.map((h) => ({ difficulty: h.q.difficulty, correct: h.correct }));
   const current = useMemo(
@@ -122,8 +127,38 @@ function QuizPage() {
     setHistory((h) => [...h, { q: current!, chosen: selected!, correct: isCorrect }]);
     setSelected(null);
     setRevealed(false);
+    setAiExplanation(null);
     if (history.length + 1 >= TOTAL_QUESTIONS) setFinished(true);
   }
+
+  const progressData = getProgress();
+  const gradeLabel = progressData.grade || "student grade";
+
+  async function handleAskAi() {
+    if (selected === null || !current) return;
+    setLoadingAi(true);
+    setAiExplanation(null);
+    try {
+      const res = await getAIExplanation({
+        data: {
+          topicTitle: topic.title,
+          difficulty: current.difficulty,
+          prompt: current.prompt,
+          choices: current.choices,
+          answerIndex: current.answerIndex,
+          chosenIndex: selected,
+          gradeLabel: gradeLabel,
+        }
+      });
+      setAiExplanation(res.explanation);
+    } catch (err) {
+      console.error("Failed to query AI Tutor:", err);
+      setAiExplanation("Sorry, I had trouble connecting to the AI Tutor. Please review the worked examples in the lesson!");
+    } finally {
+      setLoadingAi(false);
+    }
+  }
+
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -189,19 +224,47 @@ function QuizPage() {
         </div>
 
         {revealed && (
-          <div
-            className={`mt-6 rounded-2xl border p-4 text-sm ${
-              isCorrect
-                ? "border-primary/30 bg-primary/5 text-foreground"
-                : "border-coral/30 bg-coral/5 text-foreground"
-            }`}
-          >
-            <div className="font-semibold">
-              {isCorrect ? "Correct!" : "Not quite — here's why:"}
+          <div className="space-y-4 mt-6">
+            <div
+              className={`rounded-2xl border p-4 text-sm ${
+                isCorrect
+                  ? "border-primary/30 bg-primary/5 text-foreground"
+                  : "border-coral/30 bg-coral/5 text-foreground"
+              }`}
+            >
+              <div className="font-semibold">
+                {isCorrect ? "Correct!" : "Not quite — here's why:"}
+              </div>
+              <p className="mt-1 text-muted-foreground">{current.explanation}</p>
             </div>
-            <p className="mt-1 text-muted-foreground">{current.explanation}</p>
+
+            {!aiExplanation && !loadingAi && (
+              <button
+                onClick={handleAskAi}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+              >
+                <Sparkles className="h-4 w-4" /> Ask Mathchines AI Tutor for a step-by-step breakdown
+              </button>
+            )}
+
+            {loadingAi && (
+              <div className="rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm flex items-center gap-2 text-primary">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span>AI Tutor is formulating a custom response...</span>
+              </div>
+            )}
+
+            {aiExplanation && (
+              <div className="rounded-2xl border border-border bg-accent/30 p-5 text-sm animate-fade-in shadow-sm">
+                <div className="flex items-center gap-2 font-semibold text-primary text-xs uppercase tracking-wider mb-2">
+                  <Sparkles className="h-4 w-4" /> AI Tutor Explanation
+                </div>
+                <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed font-sans">{aiExplanation}</p>
+              </div>
+            )}
           </div>
         )}
+
 
         <div className="mt-6 flex justify-end gap-3">
           {!revealed ? (

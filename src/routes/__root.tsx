@@ -91,7 +91,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        href: "/pi-logo.png",
+      },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,

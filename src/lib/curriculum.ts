@@ -1,4 +1,7 @@
+import { supabase } from "@/integrations/supabase/client";
+
 export type Difficulty = "Foundational" | "Standard" | "Challenge";
+
 
 export interface Question {
   id: string;
@@ -168,13 +171,126 @@ export const COUNTRIES: Country[] = [
   },
 ];
 
-export function getCountry(code: string) {
-  return COUNTRIES.find((c) => c.code === code);
+let dbCountries: Country[] | null = null;
+let dbTopics: Topic[] | null = null;
+
+export async function loadCurriculumFromDatabase() {
+  try {
+    // 1. Fetch curricula
+    const { data: curriculaData, error: cError } = await supabase
+      .from("curricula" as any)
+      .select("*");
+    if (cError || !curriculaData) throw cError || new Error("No curricula found");
+
+    // 2. Fetch grades
+    const { data: gradesData, error: gError } = await supabase
+      .from("grades" as any)
+      .select("*");
+    if (gError || !gradesData) throw gError;
+
+    // 3. Fetch topics
+    const { data: topicsData, error: tError } = await supabase
+      .from("topics" as any)
+      .select("*");
+    if (tError || !topicsData) throw tError;
+
+    // 4. Fetch grade_topics mapping
+    const { data: mappingData, error: mError } = await supabase
+      .from("grade_topics" as any)
+      .select("*");
+    if (mError || !mappingData) throw mError;
+
+    // 5. Fetch questions
+    const { data: questionsData, error: qError } = await supabase
+      .from("questions" as any)
+      .select("*");
+    if (qError || !questionsData) throw qError;
+
+    // Build topics array with their questions
+    const topicsMap = new Map<string, Topic>();
+    for (const t of topicsData) {
+      const topicQuestions = questionsData
+        .filter((q: any) => q.topic_id === t.id)
+        .map((q: any) => ({
+          id: q.id,
+          prompt: q.prompt,
+          choices: q.choices,
+          answerIndex: q.answer_index,
+          difficulty: q.difficulty as Difficulty,
+          explanation: q.explanation,
+          examTag: q.exam_tag || undefined,
+        }));
+
+      topicsMap.set(t.id, {
+        id: t.id,
+        title: t.title,
+        objective: t.objective,
+        videoUrl: t.video_url,
+        workedExamples: (t.worked_examples as any) || [],
+        questions: topicQuestions,
+      });
+    }
+
+    // Build countries structure
+    const countriesList: Country[] = [];
+    for (const c of curriculaData) {
+      const countryGrades = gradesData.filter((g: any) => g.country_code === c.code);
+      const gradesList: Grade[] = [];
+
+      for (const g of countryGrades) {
+        const gradeTopicIds = mappingData
+          .filter((m: any) => m.grade_id === g.id)
+          .map((m: any) => m.topic_id);
+        
+        const gradeTopicsList: Topic[] = [];
+        for (const tid of gradeTopicIds) {
+          const t = topicsMap.get(tid);
+          if (t) gradeTopicsList.push(t);
+        }
+
+        gradesList.push({
+          id: g.id,
+          label: g.label,
+          topics: gradeTopicsList,
+        });
+      }
+
+      countriesList.push({
+        code: c.code,
+        name: c.name,
+        flag: c.flag,
+        curriculum: c.curriculum_name,
+        grades: gradesList,
+      });
+    }
+
+    dbCountries = countriesList;
+    dbTopics = Array.from(topicsMap.values());
+    console.log("Successfully loaded curriculum from Supabase database:", dbCountries);
+  } catch (err) {
+    console.warn("Could not load curriculum from Supabase (falling back to static local data):", err);
+  }
 }
-export function getGrade(countryCode: string, gradeId: string) {
+
+export function getCountriesList(): Country[] {
+  return dbCountries || COUNTRIES;
+}
+
+export function getCountry(code: string): Country | undefined {
+  return (dbCountries || COUNTRIES).find((c) => c.code === code);
+}
+
+export function getGrade(countryCode: string, gradeId: string): Grade | undefined {
   return getCountry(countryCode)?.grades.find((g) => g.id === gradeId);
 }
+
 export function getTopic(topicId: string): Topic | undefined {
+  if (dbTopics) {
+    const found = dbTopics.find((t) => t.id === topicId);
+    if (found) return found;
+  }
   return sharedTopics.find((t) => t.id === topicId);
 }
+
 export const ALL_TOPICS = sharedTopics;
+

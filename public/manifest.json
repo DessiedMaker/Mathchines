@@ -1,0 +1,22 @@
+{
+  "name": "Mathchines",
+  "short_name": "Mathchines",
+  "start_url": "/learn",
+  "display": "standalone",
+  "background_color": "#f5fcfc",
+  "theme_color": "#38a3a5",
+  "description": "Making math enjoyable for every student. Curriculum-aligned lessons and quizzes.",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/pi-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/pi-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -9,9 +9,11 @@ export interface Progress {
   xp: number;
   streak: number;
   lastActiveDay?: string;
+  role?: 'student' | 'teacher' | 'parent';
 }
 
 const empty: Progress = { mastered: [], xp: 0, streak: 0 };
+
 
 let currentUserId: string | null = null;
 
@@ -34,24 +36,34 @@ function write(p: Progress) {
 }
 
 async function syncToCloud(userId: string, p: Progress) {
-  await supabase
-    .from("profiles")
-    .update({
-      country: p.country ?? null,
-      grade: p.grade ?? null,
-      xp: p.xp,
-      streak: p.streak,
-      last_active_day: p.lastActiveDay ?? null,
-      mastered_topics: p.mastered,
-    })
-    .eq("id", userId);
+  try {
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        country: p.country ?? null,
+        grade: p.grade ?? null,
+        xp: p.xp,
+        streak: p.streak,
+        last_active_day: p.lastActiveDay ?? null,
+        mastered_topics: p.mastered,
+        role: p.role ?? null,
+      } as any)
+      .eq("id", userId);
+    if (error) {
+      console.warn("Cloud sync failed (possibly offline). Progress saved locally.", error);
+    }
+  } catch (err) {
+    console.warn("Error syncing progress to cloud:", err);
+  }
 }
+
+
 
 export async function hydrateFromCloud(userId: string) {
   currentUserId = userId;
   const { data, error } = await supabase
     .from("profiles")
-    .select("country, grade, xp, streak, last_active_day, mastered_topics")
+    .select("country, grade, xp, streak, last_active_day, mastered_topics, role")
     .eq("id", userId)
     .maybeSingle();
   if (error || !data) return;
@@ -62,12 +74,14 @@ export async function hydrateFromCloud(userId: string) {
     streak: data.streak ?? 0,
     lastActiveDay: data.last_active_day ?? undefined,
     mastered: data.mastered_topics ?? [],
+    role: (data as any).role ?? undefined,
   };
   if (typeof window !== "undefined") {
     window.localStorage.setItem(KEY, JSON.stringify(p));
     window.dispatchEvent(new CustomEvent("mathchines:progress"));
   }
 }
+
 
 export function clearLocalProgress() {
   currentUserId = null;
@@ -86,6 +100,13 @@ export function setSelection(country: string, grade: string) {
   p.grade = grade;
   write(p);
 }
+
+export function setRole(role: 'student' | 'teacher' | 'parent') {
+  const p = read();
+  p.role = role;
+  write(p);
+}
+
 
 export function addMastery(topicId: string, xpGained: number) {
   const p = read();
