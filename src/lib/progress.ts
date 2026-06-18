@@ -9,11 +9,10 @@ export interface Progress {
   xp: number;
   streak: number;
   lastActiveDay?: string;
-  role?: 'student' | 'teacher' | 'parent';
+  role?: "student" | "teacher" | "parent";
 }
 
 const empty: Progress = { mastered: [], xp: 0, streak: 0 };
-
 
 let currentUserId: string | null = null;
 
@@ -57,8 +56,6 @@ async function syncToCloud(userId: string, p: Progress) {
   }
 }
 
-
-
 export async function hydrateFromCloud(userId: string) {
   currentUserId = userId;
   const { data, error } = await supabase
@@ -82,7 +79,6 @@ export async function hydrateFromCloud(userId: string) {
   }
 }
 
-
 export function clearLocalProgress() {
   currentUserId = null;
   if (typeof window === "undefined") return;
@@ -101,12 +97,11 @@ export function setSelection(country: string, grade: string) {
   write(p);
 }
 
-export function setRole(role: 'student' | 'teacher' | 'parent') {
+export function setRole(role: "student" | "teacher" | "parent") {
   const p = read();
   p.role = role;
   write(p);
 }
-
 
 export function addMastery(topicId: string, xpGained: number) {
   const p = read();

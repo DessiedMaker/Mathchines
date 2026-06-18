@@ -25,7 +25,9 @@ export const Route = createFileRoute("/learn/lesson/$topicId")({
   errorComponent: ({ error, reset }) => (
     <div className="text-center">
       <p className="text-sm text-muted-foreground">{error.message}</p>
-      <button onClick={reset} className="mt-4 text-primary underline">Try again</button>
+      <button onClick={reset} className="mt-4 text-primary underline">
+        Try again
+      </button>
     </div>
   ),
   component: LessonPage,
@@ -79,9 +81,16 @@ function LessonPage() {
         <div className="rounded-3xl border border-border bg-card p-6">
           <h3 className="font-semibold">You'll learn to:</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Apply step-by-step methods</li>
-            <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Recognize common pitfalls</li>
-            <li className="flex gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Solve at three difficulty tiers</li>
+            <li className="flex gap-2">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Apply step-by-step methods
+            </li>
+            <li className="flex gap-2">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Recognize common pitfalls
+            </li>
+            <li className="flex gap-2">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" /> Solve at three difficulty
+              tiers
+            </li>
           </ul>
         </div>
         <Link

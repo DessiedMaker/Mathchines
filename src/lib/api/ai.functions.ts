@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 export const getAIExplanation = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     z.object({
       topicTitle: z.string(),
       difficulty: z.string(),
@@ -11,14 +11,15 @@ export const getAIExplanation = createServerFn({ method: "POST" })
       answerIndex: z.number(),
       chosenIndex: z.number(),
       gradeLabel: z.string(),
-    })
+    }),
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.warn("GEMINI_API_KEY is not configured.");
       return {
-        explanation: "Our AI Tutor is currently offline as the API key is not configured. But remember, practicing step-by-step is the key to mastering math! Try reviewing the worked examples on the lesson page.",
+        explanation:
+          "Our AI Tutor is currently offline as the API key is not configured. But remember, practicing step-by-step is the key to mastering math! Try reviewing the worked examples on the lesson page.",
       };
     }
 
@@ -50,9 +51,7 @@ Keep the explanation:
           body: JSON.stringify({
             contents: [
               {
-                parts: [
-                  { text: systemPrompt },
-                ],
+                parts: [{ text: systemPrompt }],
               },
             ],
             generationConfig: {
@@ -60,14 +59,14 @@ Keep the explanation:
               temperature: 0.7,
             },
           }),
-        }
+        },
       );
 
       if (!response.ok) {
         throw new Error(`Gemini API returned status ${response.status}`);
       }
 
-      const json = await response.json() as any;
+      const json = (await response.json()) as any;
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) {
         throw new Error("Invalid response format from Gemini API");
@@ -77,7 +76,8 @@ Keep the explanation:
     } catch (error) {
       console.error("Failed to generate AI explanation:", error);
       return {
-        explanation: "Oops! We had a small issue connecting to the AI Tutor. Please review the worked examples in the lesson or try another question!",
+        explanation:
+          "Oops! We had a small issue connecting to the AI Tutor. Please review the worked examples in the lesson or try another question!",
       };
     }
   });

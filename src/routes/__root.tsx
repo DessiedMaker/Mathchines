@@ -101,7 +101,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/pi-logo.png",
       },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,

@@ -48,10 +48,18 @@ function Nav() {
           <span className="text-xl font-semibold tracking-tight">Mathchines</span>
         </a>
         <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-          <a href="#features" className="transition-colors hover:text-foreground">Features</a>
-          <a href="#how" className="transition-colors hover:text-foreground">How it works</a>
-          <a href="#personas" className="transition-colors hover:text-foreground">Who it's for</a>
-          <a href="#pricing" className="transition-colors hover:text-foreground">Pricing</a>
+          <a href="#features" className="transition-colors hover:text-foreground">
+            Features
+          </a>
+          <a href="#how" className="transition-colors hover:text-foreground">
+            How it works
+          </a>
+          <a href="#personas" className="transition-colors hover:text-foreground">
+            Who it's for
+          </a>
+          <a href="#pricing" className="transition-colors hover:text-foreground">
+            Pricing
+          </a>
         </div>
         <Link
           to="/learn"
@@ -76,11 +84,13 @@ function Hero() {
             Now in development · v2.0 · Launching globally
           </span>
           <h1 className="mt-6 text-balance text-5xl font-bold leading-[1.05] md:text-6xl lg:text-7xl">
-            Making math <span className="bg-gradient-hero bg-clip-text text-transparent">enjoyable</span> for every student.
+            Making math{" "}
+            <span className="bg-gradient-hero bg-clip-text text-transparent">enjoyable</span> for
+            every student.
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Mathchines turns anxiety into achievement with curriculum-aligned lessons,
-            AI-powered tutoring, and gamified practice — on any device, with or without internet.
+            Mathchines turns anxiety into achievement with curriculum-aligned lessons, AI-powered
+            tutoring, and gamified practice — on any device, with or without internet.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -149,13 +159,15 @@ function Problem() {
   return (
     <section className="border-y border-border bg-card py-20">
       <div className="mx-auto max-w-5xl px-6 text-center">
-        <span className="text-sm font-semibold uppercase tracking-wider text-coral">The problem</span>
+        <span className="text-sm font-semibold uppercase tracking-wider text-coral">
+          The problem
+        </span>
         <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
           Math shouldn't feel impossible.
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-          Students everywhere — from Accra to Atlanta — struggle with the same gaps. We built Mathchines
-          to close every one of them.
+          Students everywhere — from Accra to Atlanta — struggle with the same gaps. We built
+          Mathchines to close every one of them.
         </p>
         <ul className="mt-10 grid gap-3 sm:grid-cols-2">
           {items.map((t) => (
@@ -219,7 +231,9 @@ function Features() {
     <section id="features" className="bg-gradient-soft py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Features</span>
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Features
+          </span>
           <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
             Everything a student needs to fall in love with math.
           </h2>
@@ -244,10 +258,26 @@ function Features() {
 }
 
 const STEPS = [
-  { n: "01", t: "Pick your country & grade", d: "Tell us where you learn. We line up the right curriculum instantly." },
-  { n: "02", t: "Take a quick placement", d: "An optional 10-question check finds the perfect starting point." },
-  { n: "03", t: "Watch & practice", d: "Expert video lessons, worked examples, and 10+ practice questions per topic." },
-  { n: "04", t: "Learn from every mistake", d: "Get an immediate, full explanation — then earn your mastery badge." },
+  {
+    n: "01",
+    t: "Pick your country & grade",
+    d: "Tell us where you learn. We line up the right curriculum instantly.",
+  },
+  {
+    n: "02",
+    t: "Take a quick placement",
+    d: "An optional 10-question check finds the perfect starting point.",
+  },
+  {
+    n: "03",
+    t: "Watch & practice",
+    d: "Expert video lessons, worked examples, and 10+ practice questions per topic.",
+  },
+  {
+    n: "04",
+    t: "Learn from every mistake",
+    d: "Get an immediate, full explanation — then earn your mastery badge.",
+  },
 ];
 
 function HowItWorks() {
@@ -255,17 +285,16 @@ function HowItWorks() {
     <section id="how" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-coral">How it works</span>
+          <span className="text-sm font-semibold uppercase tracking-wider text-coral">
+            How it works
+          </span>
           <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
             From confusion to confidence in four steps.
           </h2>
         </div>
         <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
-            <li
-              key={s.n}
-              className="relative rounded-3xl border border-border bg-card p-7"
-            >
+            <li key={s.n} className="relative rounded-3xl border border-border bg-card p-7">
               <span className="font-display text-5xl font-bold text-primary/30">{s.n}</span>
               <h3 className="mt-3 text-lg font-semibold">{s.t}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
@@ -303,7 +332,9 @@ function Personas() {
     <section id="personas" className="bg-card py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Who it's for</span>
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Who it's for
+          </span>
           <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
             Built for every kind of learner.
           </h2>
@@ -334,16 +365,30 @@ function Personas() {
 
 function ForGrownups() {
   const items = [
-    { icon: Users, t: "Teachers", d: "Assign topics, view class analytics, and push Instant Reviews on shared Trouble Spots." },
-    { icon: BookOpen, t: "Parents", d: "Weekly SMS/WhatsApp reports and a dashboard to follow real progress, not just scores." },
-    { icon: Zap, t: "Schools", d: "Bulk seat licences with full teacher tools, mock exams, and class-level mastery tracking." },
+    {
+      icon: Users,
+      t: "Teachers",
+      d: "Assign topics, view class analytics, and push Instant Reviews on shared Trouble Spots.",
+    },
+    {
+      icon: BookOpen,
+      t: "Parents",
+      d: "Weekly SMS/WhatsApp reports and a dashboard to follow real progress, not just scores.",
+    },
+    {
+      icon: Zap,
+      t: "Schools",
+      d: "Bulk seat licences with full teacher tools, mock exams, and class-level mastery tracking.",
+    },
   ];
   return (
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <span className="text-sm font-semibold uppercase tracking-wider text-coral">For grown-ups</span>
+            <span className="text-sm font-semibold uppercase tracking-wider text-coral">
+              For grown-ups
+            </span>
             <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
               Real visibility for the people who care most.
             </h2>
@@ -354,10 +399,7 @@ function ForGrownups() {
           </div>
           <ul className="space-y-4">
             {items.map((i) => (
-              <li
-                key={i.t}
-                className="flex gap-4 rounded-3xl border border-border bg-card p-6"
-              >
+              <li key={i.t} className="flex gap-4 rounded-3xl border border-border bg-card p-6">
                 <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent text-accent-foreground">
                   <i.icon className="h-6 w-6" />
                 </div>
@@ -404,7 +446,13 @@ const TIERS = [
     price: "Custom",
     sub: "Per seat / year",
     blurb: "For classrooms and districts that mean business.",
-    features: ["Bulk seat licences", "Teacher dashboard", "Class analytics", "Mock exams", "Priority support"],
+    features: [
+      "Bulk seat licences",
+      "Teacher dashboard",
+      "Class analytics",
+      "Mock exams",
+      "Priority support",
+    ],
     cta: "Talk to us",
     highlight: false,
   },
@@ -415,7 +463,9 @@ function Pricing() {
     <section id="pricing" className="bg-gradient-soft py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Pricing</span>
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Pricing
+          </span>
           <h2 className="mt-3 text-balance text-4xl font-bold md:text-5xl">
             Calibrated for every wallet, on every continent.
           </h2>
@@ -442,16 +492,22 @@ function Pricing() {
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="font-display text-5xl font-bold">{t.price}</span>
               </div>
-              <div className={`mt-1 text-sm ${t.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+              <div
+                className={`mt-1 text-sm ${t.highlight ? "text-primary-foreground/80" : "text-muted-foreground"}`}
+              >
                 {t.sub}
               </div>
-              <p className={`mt-4 text-sm ${t.highlight ? "text-primary-foreground/90" : "text-muted-foreground"}`}>
+              <p
+                className={`mt-4 text-sm ${t.highlight ? "text-primary-foreground/90" : "text-muted-foreground"}`}
+              >
                 {t.blurb}
               </p>
               <ul className="mt-6 space-y-3 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-center gap-2">
-                    <CheckCircle2 className={`h-4 w-4 ${t.highlight ? "text-gold" : "text-primary"}`} />
+                    <CheckCircle2
+                      className={`h-4 w-4 ${t.highlight ? "text-gold" : "text-primary"}`}
+                    />
                     <span>{f}</span>
                   </li>
                 ))}
@@ -459,9 +515,7 @@ function Pricing() {
               <a
                 href="#cta"
                 className={`mt-8 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-medium transition-transform hover:scale-105 ${
-                  t.highlight
-                    ? "bg-background text-foreground"
-                    : "bg-foreground text-background"
+                  t.highlight ? "bg-background text-foreground" : "bg-foreground text-background"
                 }`}
               >
                 {t.cta} <ArrowRight className="h-4 w-4" />

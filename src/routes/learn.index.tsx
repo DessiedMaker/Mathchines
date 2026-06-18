@@ -5,27 +5,30 @@ import { getProgress, setSelection, setRole } from "@/lib/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { 
-  ArrowRight, 
-  CheckCircle2, 
-  Users, 
-  PlusCircle, 
-  BookOpen, 
-  Award, 
-  Flame, 
-  Trophy, 
-  Plus, 
-  GraduationCap, 
+import {
+  ArrowRight,
+  CheckCircle2,
+  Users,
+  PlusCircle,
+  BookOpen,
+  Award,
+  Flame,
+  Trophy,
+  Plus,
+  GraduationCap,
   Mail,
   User as UserIcon,
-  Trash2
+  Trash2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/learn/")({
   head: () => ({
     meta: [
       { title: "Dashboard — Mathchines" },
-      { name: "description", content: "Interactive math learning dashboard for students, teachers, and parents." },
+      {
+        name: "description",
+        content: "Interactive math learning dashboard for students, teachers, and parents.",
+      },
     ],
   }),
   component: LearnIndex,
@@ -34,7 +37,7 @@ export const Route = createFileRoute("/learn/")({
 function LearnIndex() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
-  const [role, setRoleState] = useState<'student' | 'teacher' | 'parent'>('student');
+  const [role, setRoleState] = useState<"student" | "teacher" | "parent">("student");
   const [loading, setLoading] = useState(true);
 
   // Load user details
@@ -63,7 +66,11 @@ function LearnIndex() {
       <div className="mb-6 flex items-center justify-between border-b border-border/60 pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight capitalize">
-            {role === 'student' ? 'Student Workspace' : role === 'teacher' ? 'Teacher Admin Console' : 'Parent Tracker'}
+            {role === "student"
+              ? "Student Workspace"
+              : role === "teacher"
+                ? "Teacher Admin Console"
+                : "Parent Tracker"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Logged in as a {role}. You can switch roles from your profile layout.
@@ -71,7 +78,8 @@ function LearnIndex() {
         </div>
         <button
           onClick={async () => {
-            const nextRole = role === 'student' ? 'teacher' : role === 'teacher' ? 'parent' : 'student';
+            const nextRole =
+              role === "student" ? "teacher" : role === "teacher" ? "parent" : "student";
             setRole(nextRole);
             setRoleState(nextRole);
             toast.success(`Switched role to ${nextRole}`);
@@ -82,9 +90,9 @@ function LearnIndex() {
         </button>
       </div>
 
-      {role === 'student' && <StudentDashboard userId={userId} navigate={navigate} />}
-      {role === 'teacher' && <TeacherDashboard userId={userId} />}
-      {role === 'parent' && <ParentDashboard userId={userId} />}
+      {role === "student" && <StudentDashboard userId={userId} navigate={navigate} />}
+      {role === "teacher" && <TeacherDashboard userId={userId} />}
+      {role === "parent" && <ParentDashboard userId={userId} />}
     </div>
   );
 }
@@ -109,8 +117,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
   async function fetchMyClassrooms() {
     try {
       const { data, error } = await supabase
-        .from("classroom_enrollments" as any)
-        .select(`
+        .from("classroom_enrollments")
+        .select(
+          `
           classroom_id,
           classrooms:classroom_id (
             id,
@@ -120,7 +129,8 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
               display_name
             )
           )
-        ` as any)
+        ` as any,
+        )
         .eq("student_id", userId);
       if (data) setClassrooms(data.map((d: any) => d.classrooms));
     } catch (err) {
@@ -143,7 +153,7 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
     try {
       // 1. Find classroom
       const { data: classroom, error: cError } = await supabase
-        .from("classrooms" as any)
+        .from("classrooms")
         .select("id, name")
         .eq("code", classCode.trim().toUpperCase())
         .maybeSingle();
@@ -154,12 +164,10 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
       }
 
       // 2. Enroll
-      const { error: eError } = await supabase
-        .from("classroom_enrollments" as any)
-        .insert({
-          classroom_id: classroom.id,
-          student_id: userId,
-        } as any);
+      const { error: eError } = await supabase.from("classroom_enrollments").insert({
+        classroom_id: classroom.id,
+        student_id: userId,
+      } as any);
 
       if (eError) {
         if (eError.message.toLowerCase().includes("unique")) {
@@ -185,15 +193,20 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
       <div className="lg:col-span-2 space-y-10">
         <section className="rounded-3xl border border-border bg-card p-6 md:p-8">
           <div className="max-w-xl">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Curriculum Select</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+              Curriculum Select
+            </span>
             <h2 className="mt-2 text-2xl font-bold">Pick your path</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Select your country and grade to unlock localized WAEC, GCSE, or Common Core lesson packages.
+              Select your country and grade to unlock localized WAEC, GCSE, or Common Core lesson
+              packages.
             </p>
           </div>
 
           <div className="mt-8">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Country</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Country
+            </h3>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {getCountriesList().map((c) => {
                 const active = c.code === country;
@@ -213,7 +226,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
                     <span className="text-2xl">{c.flag}</span>
                     <div className="mt-2 font-semibold text-sm">{c.name}</div>
                     <div className="text-[10px] text-muted-foreground">{c.curriculum}</div>
-                    {active && <CheckCircle2 className="absolute right-3 top-3 h-4 w-4 text-primary" />}
+                    {active && (
+                      <CheckCircle2 className="absolute right-3 top-3 h-4 w-4 text-primary" />
+                    )}
                   </button>
                 );
               })}
@@ -222,7 +237,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
 
           {selectedCountry && (
             <div className="mt-8">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Grade / Class</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Grade / Class
+              </h3>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {selectedCountry.grades.map((g) => {
                   const active = g.id === grade;
@@ -237,7 +254,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
                       }`}
                     >
                       <div className="font-semibold text-sm">{g.label}</div>
-                      <div className="text-[10px] text-muted-foreground">{g.topics.length} topics ready</div>
+                      <div className="text-[10px] text-muted-foreground">
+                        {g.topics.length} topics ready
+                      </div>
                     </button>
                   );
                 })}
@@ -296,7 +315,10 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
               </div>
             ) : (
               classrooms.map((c) => (
-                <div key={c.id} className="flex items-center justify-between rounded-2xl border border-border p-4">
+                <div
+                  key={c.id}
+                  className="flex items-center justify-between rounded-2xl border border-border p-4"
+                >
                   <div>
                     <h3 className="font-semibold text-sm">{c.name}</h3>
                     <div className="text-[10px] text-muted-foreground">
@@ -334,7 +356,7 @@ function TeacherDashboard({ userId }: { userId: string }) {
   async function fetchClassrooms() {
     try {
       const { data, error } = await supabase
-        .from("classrooms" as any)
+        .from("classrooms")
         .select("*, grades(label)" as any)
         .eq("teacher_id", userId);
       if (data) setClassrooms(data);
@@ -350,14 +372,12 @@ function TeacherDashboard({ userId }: { userId: string }) {
 
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
     try {
-      const { error } = await supabase
-        .from("classrooms" as any)
-        .insert({
-          name: newClassName.trim(),
-          grade_id: newGrade,
-          teacher_id: userId,
-          code,
-        } as any);
+      const { error } = await supabase.from("classrooms").insert({
+        name: newClassName.trim(),
+        grade_id: newGrade,
+        teacher_id: userId,
+        code,
+      } as any);
 
       if (error) {
         toast.error(error.message);
@@ -379,8 +399,9 @@ function TeacherDashboard({ userId }: { userId: string }) {
     setEnrolledStudents([]);
     try {
       const { data, error } = await supabase
-        .from("classroom_enrollments" as any)
-        .select(`
+        .from("classroom_enrollments")
+        .select(
+          `
           student_id,
           profiles:student_id (
             id,
@@ -390,7 +411,8 @@ function TeacherDashboard({ userId }: { userId: string }) {
             streak,
             mastered_topics
           )
-        ` as any)
+        ` as any,
+        )
         .eq("classroom_id", cls.id);
       if (data) setEnrolledStudents(data.map((d: any) => d.profiles));
     } catch (err) {
@@ -448,7 +470,10 @@ function TeacherDashboard({ userId }: { userId: string }) {
           <section className="rounded-3xl border border-border bg-card p-6 md:p-8">
             <h2 className="text-2xl font-bold">{selectedClass.name} — Student Roster</h2>
             <p className="text-xs text-muted-foreground mt-1">
-              Classroom Code: <span className="font-mono font-bold text-foreground bg-accent px-2 py-0.5 rounded">{selectedClass.code}</span>
+              Classroom Code:{" "}
+              <span className="font-mono font-bold text-foreground bg-accent px-2 py-0.5 rounded">
+                {selectedClass.code}
+              </span>
             </p>
 
             <div className="mt-6 space-y-3">
@@ -463,7 +488,9 @@ function TeacherDashboard({ userId }: { userId: string }) {
                     className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border p-4 bg-background"
                   >
                     <div>
-                      <h4 className="font-semibold text-sm">{student.display_name || student.email}</h4>
+                      <h4 className="font-semibold text-sm">
+                        {student.display_name || student.email}
+                      </h4>
                       <p className="text-[10px] text-muted-foreground">{student.email}</p>
                     </div>
                     <div className="flex gap-4 text-xs">
@@ -477,7 +504,9 @@ function TeacherDashboard({ userId }: { userId: string }) {
                       </div>
                       <div className="flex items-center gap-1">
                         <Award className="h-4 w-4 text-primary" />
-                        <span className="font-bold">{(student.mastered_topics || []).length} mastered</span>
+                        <span className="font-bold">
+                          {(student.mastered_topics || []).length} mastered
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -512,7 +541,9 @@ function TeacherDashboard({ userId }: { userId: string }) {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-muted-foreground">Syllabus Grade Mapping</label>
+              <label className="text-xs font-semibold text-muted-foreground">
+                Syllabus Grade Mapping
+              </label>
               <select
                 required
                 value={newGrade}
@@ -573,8 +604,9 @@ function ParentDashboard({ userId }: { userId: string }) {
   async function fetchLinkedChildren() {
     try {
       const { data, error } = await supabase
-        .from("parent_student_links" as any)
-        .select(`
+        .from("parent_student_links")
+        .select(
+          `
           student_id,
           profiles:student_id (
             id,
@@ -584,7 +616,8 @@ function ParentDashboard({ userId }: { userId: string }) {
             streak,
             mastered_topics
           )
-        ` as any)
+        ` as any,
+        )
         .eq("parent_id", userId);
       if (data) setChildren(data.map((d: any) => d.profiles));
     } catch (err) {
@@ -623,17 +656,17 @@ function ParentDashboard({ userId }: { userId: string }) {
 
       if (!studentId) {
         // Since profiles contains display_name and ID, let's look for exact match or alert
-        toast.error(`Student name/display name "${emailToLink}" not found. Ask them to check their Display Name in their auth page.`);
+        toast.error(
+          `Student name/display name "${emailToLink}" not found. Ask them to check their Display Name in their auth page.`,
+        );
         return;
       }
 
       // 2. Link
-      const { error } = await supabase
-        .from("parent_student_links" as any)
-        .insert({
-          parent_id: userId,
-          student_id: studentId,
-        } as any);
+      const { error } = await supabase.from("parent_student_links").insert({
+        parent_id: userId,
+        student_id: studentId,
+      } as any);
 
       if (error) {
         if (error.message.toLowerCase().includes("unique")) {
@@ -656,7 +689,7 @@ function ParentDashboard({ userId }: { userId: string }) {
   async function handleUnlink(studentId: string) {
     try {
       const { error } = await supabase
-        .from("parent_student_links" as any)
+        .from("parent_student_links")
         .delete()
         .eq("parent_id", userId)
         .eq("student_id", studentId);
@@ -692,10 +725,14 @@ function ParentDashboard({ userId }: { userId: string }) {
                   className="rounded-2xl border border-border p-6 bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-soft transition-all"
                 >
                   <div>
-                    <h3 className="font-bold text-lg">{child.display_name || "Enrolled Student"}</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">Student Profile ID: {child.id.substring(0, 8)}...</p>
+                    <h3 className="font-bold text-lg">
+                      {child.display_name || "Enrolled Student"}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Student Profile ID: {child.id.substring(0, 8)}...
+                    </p>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-4 text-xs font-semibold">
                     <div className="flex items-center gap-1.5 bg-coral/10 text-coral px-3 py-1.5 rounded-full">
                       <Trophy className="h-4 w-4" />
@@ -731,12 +768,15 @@ function ParentDashboard({ userId }: { userId: string }) {
             <Plus className="h-5 w-5 text-primary" /> Link a Student
           </h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Search for a student using their exact **Display Name** to link their metrics to your dashboard.
+            Search for a student using their exact **Display Name** to link their metrics to your
+            dashboard.
           </p>
 
           <form onSubmit={handleLinkStudent} className="mt-6 space-y-4">
             <div>
-              <label className="text-xs font-semibold text-muted-foreground">Student's Display Name</label>
+              <label className="text-xs font-semibold text-muted-foreground">
+                Student's Display Name
+              </label>
               <input
                 type="text"
                 required

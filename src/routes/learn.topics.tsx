@@ -8,7 +8,11 @@ export const Route = createFileRoute("/learn/topics")({
   head: () => ({
     meta: [
       { title: "Topics — Mathchines" },
-      { name: "description", content: "Pick a topic to start learning. Each comes with a video lesson and adaptive practice." },
+      {
+        name: "description",
+        content:
+          "Pick a topic to start learning. Each comes with a video lesson and adaptive practice.",
+      },
     ],
   }),
   component: TopicsPage,
@@ -37,13 +41,19 @@ function TopicsPage() {
           </span>
           <h1 className="mt-2 text-4xl font-bold md:text-5xl">Your learning path</h1>
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Pick any topic. Watch the lesson, then practice — you'll earn a Mastery badge when you hit 80%.
+            Pick any topic. Watch the lesson, then practice — you'll earn a Mastery badge when you
+            hit 80%.
           </p>
         </div>
         <div className="flex gap-3">
           <Stat icon={Trophy} label="XP" value={p.xp.toString()} tone="text-coral" />
           <Stat icon={Flame} label="Streak" value={`${p.streak}d`} tone="text-gold-foreground" />
-          <Stat icon={Award} label="Mastered" value={p.mastered.length.toString()} tone="text-primary" />
+          <Stat
+            icon={Award}
+            label="Mastered"
+            value={p.mastered.length.toString()}
+            tone="text-primary"
+          />
         </div>
       </div>
 

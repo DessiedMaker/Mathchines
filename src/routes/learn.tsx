@@ -1,9 +1,24 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { Sparkles, ArrowLeft, LogOut, Loader2, GraduationCap, Users, ArrowRight, BookOpen } from "lucide-react";
+import {
+  Sparkles,
+  ArrowLeft,
+  LogOut,
+  Loader2,
+  GraduationCap,
+  Users,
+  ArrowRight,
+  BookOpen,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import piLogo from "@/assets/pi-logo.png";
 import { supabase } from "@/integrations/supabase/client";
-import { hydrateFromCloud, clearLocalProgress, getProgress, setRole, subscribe } from "@/lib/progress";
+import {
+  hydrateFromCloud,
+  clearLocalProgress,
+  getProgress,
+  setRole,
+  subscribe,
+} from "@/lib/progress";
 import { loadCurriculumFromDatabase } from "@/lib/curriculum";
 import type { User } from "@supabase/supabase-js";
 
@@ -11,8 +26,8 @@ export const Route = createFileRoute("/learn")({
   component: LearnLayout,
 });
 
-function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'parent') => void }) {
-  const [selected, setSelected] = useState<'student' | 'teacher' | 'parent' | null>(null);
+function RoleSelection({ onSelect }: { onSelect: (r: "student" | "teacher" | "parent") => void }) {
+  const [selected, setSelected] = useState<"student" | "teacher" | "parent" | null>(null);
   const [saving, setSaving] = useState(false);
 
   async function handleConfirm() {
@@ -32,7 +47,9 @@ function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'pa
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="w-full max-w-3xl rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-12">
         <div className="text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">Onboarding</span>
+          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+            Onboarding
+          </span>
           <h1 className="mt-3 text-4xl font-bold md:text-5xl">Choose your path</h1>
           <p className="mt-4 text-muted-foreground">
             Welcome to Mathchines! Tell us how you will be using the application.
@@ -42,25 +59,25 @@ function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'pa
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {[
             {
-              id: 'student',
+              id: "student",
               icon: BookOpen,
-              label: 'Student',
-              desc: 'Choose topics, solve quizzes, build streaks, and earn badges.',
-              accent: 'bg-primary/10 text-primary border-primary/20',
+              label: "Student",
+              desc: "Choose topics, solve quizzes, build streaks, and earn badges.",
+              accent: "bg-primary/10 text-primary border-primary/20",
             },
             {
-              id: 'teacher',
+              id: "teacher",
               icon: GraduationCap,
-              label: 'Teacher',
-              desc: 'Set up classrooms, invite students, and track class progress metrics.',
-              accent: 'bg-coral/15 text-coral border-coral/20',
+              label: "Teacher",
+              desc: "Set up classrooms, invite students, and track class progress metrics.",
+              accent: "bg-coral/15 text-coral border-coral/20",
             },
             {
-              id: 'parent',
+              id: "parent",
               icon: Users,
-              label: 'Parent',
+              label: "Parent",
               desc: "Link to your children's profiles and follow their learning metrics.",
-              accent: 'bg-gold/25 text-gold-foreground border-gold/20',
+              accent: "bg-gold/25 text-gold-foreground border-gold/20",
             },
           ].map((item) => {
             const active = selected === item.id;
@@ -71,8 +88,8 @@ function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'pa
                 onClick={() => setSelected(item.id as any)}
                 className={`relative rounded-2xl border p-6 text-left transition-all ${
                   active
-                    ? 'border-foreground bg-accent shadow-soft scale-[1.02]'
-                    : 'border-border bg-card hover:border-foreground/30 hover:-translate-y-0.5'
+                    ? "border-foreground bg-accent shadow-soft scale-[1.02]"
+                    : "border-border bg-card hover:border-foreground/30 hover:-translate-y-0.5"
                 }`}
               >
                 <div className={`grid h-12 w-12 place-items-center rounded-2xl ${item.accent}`}>
@@ -91,7 +108,7 @@ function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'pa
             disabled={!selected || saving}
             className="inline-flex items-center gap-2 rounded-full bg-gradient-hero px-6 py-3 font-medium text-primary-foreground shadow-glow transition-transform enabled:hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {saving ? 'Saving...' : 'Confirm selection'} <ArrowRight className="h-4 w-4" />
+            {saving ? "Saving..." : "Confirm selection"} <ArrowRight className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -102,7 +119,7 @@ function RoleSelection({ onSelect }: { onSelect: (r: 'student' | 'teacher' | 'pa
 function LearnLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  const [role, setRoleState] = useState<'student' | 'teacher' | 'parent' | null>(null);
+  const [role, setRoleState] = useState<"student" | "teacher" | "parent" | null>(null);
   const [checking, setChecking] = useState(true);
   const [isOnline, setIsOnline] = useState(true);
 
@@ -138,10 +155,7 @@ function LearnLayout() {
         navigate({ to: "/auth" });
       } else {
         setUser(data.session.user);
-        await Promise.all([
-          hydrateFromCloud(data.session.user.id),
-          loadCurriculumFromDatabase()
-        ]);
+        await Promise.all([hydrateFromCloud(data.session.user.id), loadCurriculumFromDatabase()]);
         setRoleState(getProgress().role || null);
       }
       setChecking(false);
@@ -163,7 +177,6 @@ function LearnLayout() {
     await supabase.auth.signOut();
     navigate({ to: "/auth", replace: true });
   }
-
 
   if (checking || !user) {
     return (
@@ -198,7 +211,9 @@ function LearnLayout() {
                 {role} mode
               </span>
             )}
-            <span className="hidden text-sm text-muted-foreground sm:inline mr-2">{user.email}</span>
+            <span className="hidden text-sm text-muted-foreground sm:inline mr-2">
+              {user.email}
+            </span>
             <Link
               to="/"
               className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -218,11 +233,7 @@ function LearnLayout() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-10">
-        {!role ? (
-          <RoleSelection onSelect={(r) => setRoleState(r)} />
-        ) : (
-          <Outlet />
-        )}
+        {!role ? <RoleSelection onSelect={(r) => setRoleState(r)} /> : <Outlet />}
       </main>
       <footer className="mx-auto max-w-6xl px-6 py-10 text-center text-xs text-muted-foreground">
         <Sparkles className="mx-auto h-4 w-4 text-primary" />
