@@ -577,7 +577,10 @@ function Footer() {
             Product Deck
           </Link>
           <span className="h-4 w-px bg-border hidden sm:inline" />
-          <Link to="/pitch-investor" className="transition-colors hover:text-foreground font-medium text-emerald-600 hover:text-emerald-500 font-semibold">
+          <Link
+            to="/pitch-investor"
+            className="transition-colors hover:text-foreground font-medium text-emerald-600 hover:text-emerald-500 font-semibold"
+          >
             Investor Deck
           </Link>
           <span className="h-4 w-px bg-border" />
