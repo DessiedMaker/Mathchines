@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PitchInvestorRouteImport } from './routes/pitch-investor'
+import { Route as PitchRouteImport } from './routes/pitch'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +19,16 @@ import { Route as LearnTopicsRouteImport } from './routes/learn.topics'
 import { Route as LearnQuizTopicIdRouteImport } from './routes/learn.quiz.$topicId'
 import { Route as LearnLessonTopicIdRouteImport } from './routes/learn.lesson.$topicId'
 
+const PitchInvestorRoute = PitchInvestorRouteImport.update({
+  id: '/pitch-investor',
+  path: '/pitch-investor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PitchRoute = PitchRouteImport.update({
+  id: '/pitch',
+  path: '/pitch',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnRoute = LearnRouteImport.update({
   id: '/learn',
   path: '/learn',
@@ -57,6 +69,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/learn': typeof LearnRouteWithChildren
+  '/pitch': typeof PitchRoute
+  '/pitch-investor': typeof PitchInvestorRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
@@ -65,6 +79,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/pitch': typeof PitchRoute
+  '/pitch-investor': typeof PitchInvestorRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learn': typeof LearnIndexRoute
   '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
@@ -75,6 +91,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/learn': typeof LearnRouteWithChildren
+  '/pitch': typeof PitchRoute
+  '/pitch-investor': typeof PitchInvestorRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learn/': typeof LearnIndexRoute
   '/learn/lesson/$topicId': typeof LearnLessonTopicIdRoute
@@ -86,6 +104,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/learn'
+    | '/pitch'
+    | '/pitch-investor'
     | '/learn/topics'
     | '/learn/'
     | '/learn/lesson/$topicId'
@@ -94,6 +114,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/pitch'
+    | '/pitch-investor'
     | '/learn/topics'
     | '/learn'
     | '/learn/lesson/$topicId'
@@ -103,6 +125,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/learn'
+    | '/pitch'
+    | '/pitch-investor'
     | '/learn/topics'
     | '/learn/'
     | '/learn/lesson/$topicId'
@@ -113,10 +137,26 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   LearnRoute: typeof LearnRouteWithChildren
+  PitchRoute: typeof PitchRoute
+  PitchInvestorRoute: typeof PitchInvestorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/pitch-investor': {
+      id: '/pitch-investor'
+      path: '/pitch-investor'
+      fullPath: '/pitch-investor'
+      preLoaderRoute: typeof PitchInvestorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pitch': {
+      id: '/pitch'
+      path: '/pitch'
+      fullPath: '/pitch'
+      preLoaderRoute: typeof PitchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn': {
       id: '/learn'
       path: '/learn'
@@ -189,6 +229,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   LearnRoute: LearnRouteWithChildren,
+  PitchRoute: PitchRoute,
+  PitchInvestorRoute: PitchInvestorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

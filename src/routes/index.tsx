@@ -572,6 +572,19 @@ function Footer() {
           <img src={piLogo} alt="Mathchines pi logo" width={32} height={32} className="h-8 w-8" />
           <span className="font-semibold">Mathchines</span>
         </div>
+        <div className="flex items-center gap-6 text-sm text-muted-foreground flex-wrap justify-center animate-fade-in">
+          <Link to="/pitch" className="transition-colors hover:text-foreground font-medium">
+            Product Deck
+          </Link>
+          <span className="h-4 w-px bg-border hidden sm:inline" />
+          <Link to="/pitch-investor" className="transition-colors hover:text-foreground font-medium text-emerald-600 hover:text-emerald-500 font-semibold">
+            Investor Deck
+          </Link>
+          <span className="h-4 w-px bg-border" />
+          <Link to="/learn" className="transition-colors hover:text-foreground font-medium">
+            App Demo
+          </Link>
+        </div>
         <p className="text-sm text-muted-foreground">
           © 2026 Mathchines. Making math enjoyable for every student.
         </p>
@@ -580,9 +593,34 @@ function Footer() {
   );
 }
 
+function PitchDeckBanner() {
+  return (
+    <div className="bg-gradient-hero text-primary-foreground px-4 py-2.5 text-center text-xs font-semibold relative z-50 shadow-soft">
+      <span className="inline-flex items-center gap-1.5 flex-wrap justify-center">
+        <Sparkles className="h-3.5 w-3.5 animate-pulse text-gold" />
+        Mathchines v2.0 Pitch Decks are live!
+        <Link
+          to="/pitch"
+          className="underline hover:text-white transition-colors inline-flex items-center gap-0.5 ml-1.5 font-bold"
+        >
+          Product Deck <ArrowRight className="h-3 w-3" />
+        </Link>
+        <span className="mx-2 opacity-50">|</span>
+        <Link
+          to="/pitch-investor"
+          className="underline hover:text-white transition-colors inline-flex items-center gap-0.5 font-bold text-emerald-300"
+        >
+          Investor & Growth Deck <ArrowRight className="h-3 w-3" />
+        </Link>
+      </span>
+    </div>
+  );
+}
+
 function Landing() {
   return (
     <div className="min-h-screen bg-background">
+      <PitchDeckBanner />
       <Nav />
       <main>
         <Hero />
