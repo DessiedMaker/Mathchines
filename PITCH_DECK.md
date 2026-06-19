@@ -60,10 +60,10 @@ Use a markdown presentation viewer (like **Marp**, **Slidev**, or the VS Code Ma
 # Primary Personas
 ### Meeting Learners Where They Are
 
-* **Ama / Alex (12–18 yrs) · The Struggling Student**
+* **Ama / Nia (12–18 yrs) · The Struggling Student**
   * *Pain Point:* Feels lost in large classes; lacks personal attention.
   * *Goal:* Rebuild confidence, explain specific concepts, improve grades.
-* **Kofi / Jordan (13–18 yrs) · The Self-Directed Learner**
+* **Kofi / Malik (13–18 yrs) · The Self-Directed Learner**
   * *Pain Point:* General learning apps are too generic or lack target exam focus.
   * *Goal:* Advance ahead of class curricula, prepare for national exams.
 * **Kwame / Fatima (12–16 yrs) · The Low-Connectivity Learner**

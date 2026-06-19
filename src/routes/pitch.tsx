@@ -288,7 +288,7 @@ function PitchDeck() {
                 We support both Western students seeking mastery and Sub-Saharan learners navigating data limits.
               </p>
               <div className="mt-4 flex gap-1.5">
-                {["Ama / Alex", "Kofi / Jordan", "Kwame / Fatima"].map((name, i) => (
+                {["Ama / Nia", "Kofi / Malik", "Kwame / Fatima"].map((name, i) => (
                   <button
                     key={i}
                     onClick={() => setActivePersona(i)}
@@ -310,7 +310,7 @@ function PitchDeck() {
                       <Users className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-slate-200">Ama / Alex (12-18 years)</h4>
+                      <h4 className="font-bold text-sm text-slate-200">Ama / Nia (12-18 years)</h4>
                       <span className="text-[10px] text-sky-400">The Struggling Student</span>
                     </div>
                   </div>
@@ -329,7 +329,7 @@ function PitchDeck() {
                       <GraduationCap className="h-5 w-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-slate-200">Kofi / Jordan (13-18 years)</h4>
+                      <h4 className="font-bold text-sm text-slate-200">Kofi / Malik (13-18 years)</h4>
                       <span className="text-[10px] text-emerald-400">The Self-Directed Learner</span>
                     </div>
                   </div>

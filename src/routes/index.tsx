@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImage from "@/assets/hero-students.jpg";
+import heroImage from "@/assets/hero-students.png";
 import piLogo from "@/assets/pi-logo.png";
 import {
   Sparkles,

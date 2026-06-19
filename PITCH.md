@@ -35,8 +35,8 @@ Designed to showcase the core user experience, primary personas, and student suc
 ### Slide 4: Primary Personas
 * **Subtitle**: Meeting Learners Where They Are
 * **Key Visuals**: Profiles of three primary student archetypes:
-  - **Ama / Alex (12-18 yrs) — The Struggling Student**: Wants to understand specific math concepts and build failing marks back up.
-  - **Kofi / Jordan (13-18 yrs) — The Self-Directed Learner**: Wants standard curriculum-aligned content to get ahead of standard classes and pass competitive entry exams.
+  - **Ama / Nia (12-18 yrs) — The Struggling Student**: Wants to understand specific math concepts and build failing marks back up.
+  - **Kofi / Malik (13-18 yrs) — The Self-Directed Learner**: Wants standard curriculum-aligned content to get ahead of standard classes and pass competitive entry exams.
   - **Kwame / Fatima (12-16 yrs) — The Low-Connectivity Learner**: Needs to clear BECE/WAEC exams using low-end mobile devices and zero/limited internet connectivity.
 * **Presenter Notes**:
   > We've mapped out three primary target personas. First, Ama: the struggling JHS/SHS student who is lost in class and wants to build confidence. Second, Kofi: the self-directed learner striving for academic excellence and exam edge. Third, Kwame: the low-connectivity learner who represents millions of students in markets like Sub-Saharan Africa who use budget Android devices and have unreliable internet. Mathchines fits the specific needs of all three.
