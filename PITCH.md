@@ -16,7 +16,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Subtitle**: Making Math Enjoyable for Every Student
 - **Key Visuals**: Pi logo symbol, badges representing "Curriculum Aligned", "Adaptive Engine", and "Offline Capable".
 - **Presenter Notes**:
-  > Welcome everyone. Today we are presenting Mathchines, a revolutionary mathematics platform designed to transform math from a source of anxiety into an enjoyable, rewarding pursuit. Mathchines is built to be accessible to students globally, with a specific focus on curriculum alignment and offline-first capabilities to reach both Western and African markets. We'll walk through the problem, our solution, target personas, MVP learning flow, competitor comparisons, monetization, and our growth roadmap.
+  > Welcome everyone. Today we are presenting Mathchines, a revolutionary mathematics platform designed to transform math from a source of anxiety into an enjoyable, rewarding pursuit. Mathchines is built to be accessible to students globally, with a specific focus on curriculum alignment and offline-first capabilities to reach both Western and African markets. We'll walk through the problem, our solution, target personas, MVP learning flow, competitor comparisons, and our growth roadmap.
 
 ### Slide 2: The Problem
 
@@ -59,17 +59,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > The user journey is streamlined for maximum efficiency: users onboard by selecting their country and grade (which maps the app to their specific local syllabus, like Ghana's GES). They can take an optional 5-question Adaptive Placement Quiz to identify skill gaps. Once they select a topic, they watch a short tutor-led animated lesson, complete an adaptive practice set of 10 questions, receive immediate worked explanations for errors, and earn mastery badges to progress.
 
-### Slide 6: Monetization & Pricing
-
-- **Subtitle**: Calibrated for Global Affordability
-- **Key Visuals**: Tiers dashboard:
-  - **Free Tier**: 3 topics/week, adaptive practice, mobile + web.
-  - **Premium Student**: $4.99/mo (or GHS 1-2 per day via airtime micro-billing). Includes unlimited topics, offline mode, speed drills, and AI tutoring.
-  - **School License**: Custom pricing for bulk seat licenses, classroom teacher analytics, and diagnostic mock tests.
-- **Presenter Notes**:
-  > Our monetization follows a freemium model. The Free tier offers full access to basic topics. Premium students unlock unlimited lessons, offline mode, and parent reports for $4.99/month, or a localized micro-payment of GHS 1-2 per day via mobile airtime. This airtime subscription is crucial for high conversion in Africa. Schools can also purchase bulk licenses which include a teacher analytics dashboard to monitor trouble spots.
-
-### Slide 7: Roadmap & Go-To-Market
+### Slide 6: Roadmap & Go-To-Market
 
 - **Subtitle**: Phase 1 - Phase 7 Lifecycle
 - **Key Visuals**: Gantt-style roadmap milestones:
@@ -80,7 +70,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > Our proposed roadmap is divided into structured phases. We start with Phase 1-2: curriculum mapping and UX design. We build the core MVP in Weeks 5-6 (currently in progress), followed by thorough beta testing in Ghana and the US. Launch is slated for Week 7, with post-MVP features like 1v1 Math-Off duels, Lightning Jams, and parent SMS reports releasing in subsequent months. By Phase 7, we expand to Nigeria, Kenya, and the UK.
 
-### Slide 8: MVP Success Metrics
+### Slide 7: MVP Success Metrics
 
 - **Subtitle**: KPIs to Validate our Core Hypothesis
 - **Key Visuals**: Gauge bars for target targets:
@@ -91,7 +81,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > To validate that Mathchines improves comprehension, we are measuring several key performance indicators. We're targeting a Day 7 retention of 40% or higher, a lesson completion rate of 60%, and an assessment attempt rate of 70%. At least 20% of sessions are expected to run offline, validating our offline-first architecture. Our ultimate success metric is achieving a 15% average learning gain in 30 days.
 
-### Slide 9: Join the Revolution
+### Slide 8: Join the Revolution
 
 - **Subtitle**: Making Math Accessible to Every Mind
 - **Presenter Notes**:

@@ -116,11 +116,45 @@ function RoleSelection({ onSelect }: { onSelect: (r: "student" | "teacher" | "pa
   );
 }
 
+function getInitialUser(): User | null {
+  if (typeof window === "undefined") return null;
+  const isMock = localStorage.getItem("mathchines.mock_auth") === "true";
+  if (isMock) {
+    return {
+      id: "demo-user-id",
+      email: "demo@mathchines.com",
+      user_metadata: { display_name: "Demo Learner" },
+    } as any;
+  }
+  try {
+    const raw = localStorage.getItem("sb-ilrgtouzacxisprenntg-auth-token");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.user) return parsed.user;
+    }
+  } catch (err) {
+    console.error("Error reading initial user session:", err);
+  }
+  return null;
+}
+
+function getInitialRole(): "student" | "teacher" | "parent" | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("mathchines.progress.v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.role) return parsed.role;
+    }
+  } catch {}
+  return null;
+}
+
 function LearnLayout() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
-  const [role, setRoleState] = useState<"student" | "teacher" | "parent" | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [user, setUser] = useState<User | null>(getInitialUser);
+  const [role, setRoleState] = useState<"student" | "teacher" | "parent" | null>(getInitialRole);
+  const [checking, setChecking] = useState(() => !getInitialUser());
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
@@ -150,15 +184,52 @@ function LearnLayout() {
     });
 
     const init = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        navigate({ to: "/auth" });
-      } else {
-        setUser(data.session.user);
-        await Promise.all([hydrateFromCloud(data.session.user.id), loadCurriculumFromDatabase()]);
-        setRoleState(getProgress().role || null);
+      try {
+        const sessionPromise = supabase.auth.getSession();
+        const authTimeout = new Promise<{ data: { session: any } }>((resolve) => {
+          setTimeout(() => resolve({ data: { session: null } }), 2000);
+        });
+        
+        const { data } = await Promise.race([sessionPromise, authTimeout]);
+        
+        if (!data.session) {
+          const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+          if (isMock) {
+            setUser({ id: "demo-user-id", email: "demo@mathchines.com", user_metadata: { display_name: "Demo Learner" } } as any);
+            setRoleState(getProgress().role || null);
+          } else {
+            navigate({ to: "/auth" });
+          }
+        } else {
+          setUser(data.session.user);
+          
+          const loadPromise = Promise.all([
+            hydrateFromCloud(data.session.user.id),
+            loadCurriculumFromDatabase(),
+          ]);
+          
+          const loadTimeout = new Promise((resolve) => {
+            setTimeout(() => {
+              console.warn("Supabase loading timed out. Falling back to local data.");
+              resolve(null);
+            }, 2000);
+          });
+
+          await Promise.race([loadPromise, loadTimeout]);
+          setRoleState(getProgress().role || null);
+        }
+      } catch (err) {
+        console.error("Auth init failed, falling back to local progress:", err);
+        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        if (isMock) {
+          setUser({ id: "demo-user-id", email: "demo@mathchines.com", user_metadata: { display_name: "Demo Learner" } } as any);
+          setRoleState(getProgress().role || null);
+        } else {
+          navigate({ to: "/auth" });
+        }
+      } finally {
+        setChecking(false);
       }
-      setChecking(false);
     };
 
     void init();

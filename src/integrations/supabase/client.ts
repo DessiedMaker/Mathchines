@@ -138,6 +138,21 @@ const mockAuth = {
     listeners.forEach((cb) => cb("SIGNED_OUT", null));
     return { error: null };
   },
+  getClaims: async (token: string) => {
+    if (token === "mock-token") {
+      return {
+        data: {
+          claims: {
+            sub: "demo-user-id",
+            email: "demo@mathchines.com",
+            user_metadata: { display_name: "Demo Learner" },
+          },
+        },
+        error: null,
+      };
+    }
+    return { data: null, error: new Error("Invalid token") };
+  },
 };
 
 const mockSupabase = {

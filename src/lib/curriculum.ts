@@ -405,24 +405,25 @@ let dbTopics: Topic[] | null = null;
 
 export async function loadCurriculumFromDatabase() {
   try {
-    // 1. Fetch curricula
-    const { data: curriculaData, error: cError } = await supabase.from("curricula").select("*");
+    // Fetch all curriculum data in parallel to maximize performance and minimize network RTT bottlenecks
+    const [
+      { data: curriculaData, error: cError },
+      { data: gradesData, error: gError },
+      { data: topicsData, error: tError },
+      { data: mappingData, error: mError },
+      { data: questionsData, error: qError },
+    ] = await Promise.all([
+      supabase.from("curricula").select("*"),
+      supabase.from("grades").select("*"),
+      supabase.from("topics").select("*"),
+      supabase.from("grade_topics").select("*"),
+      supabase.from("questions").select("*"),
+    ]);
+
     if (cError || !curriculaData) throw cError || new Error("No curricula found");
-
-    // 2. Fetch grades
-    const { data: gradesData, error: gError } = await supabase.from("grades").select("*");
     if (gError || !gradesData) throw gError;
-
-    // 3. Fetch topics
-    const { data: topicsData, error: tError } = await supabase.from("topics").select("*");
     if (tError || !topicsData) throw tError;
-
-    // 4. Fetch grade_topics mapping
-    const { data: mappingData, error: mError } = await supabase.from("grade_topics").select("*");
     if (mError || !mappingData) throw mError;
-
-    // 5. Fetch questions
-    const { data: questionsData, error: qError } = await supabase.from("questions").select("*");
     if (qError || !questionsData) throw qError;
 
     // Build topics array with their questions

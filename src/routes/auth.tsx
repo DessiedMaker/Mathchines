@@ -40,9 +40,20 @@ function AuthPage() {
 
   // Redirect if already signed in
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/learn" });
+    const sessionPromise = supabase.auth.getSession();
+    const timeoutPromise = new Promise<{ data: { session: any } }>((resolve) => {
+      setTimeout(() => resolve({ data: { session: null } }), 1500);
     });
+
+    Promise.race([sessionPromise, timeoutPromise]).then(({ data }) => {
+      if (data.session) {
+        navigate({ to: "/learn" });
+      } else {
+        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        if (isMock) navigate({ to: "/learn" });
+      }
+    });
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) navigate({ to: "/learn" });
     });
@@ -74,6 +85,7 @@ function AuthPage() {
           return;
         }
         toast.success("Account created! You're signed in.");
+        navigate({ to: "/learn" });
       } else {
         const parsed = signInSchema.safeParse({ email, password });
         if (!parsed.success) {
@@ -100,9 +112,11 @@ function AuthPage() {
                 password: parsed.data.password,
               });
               toast.success("Signed in as Demo Learner (Mock Mode)!");
+              navigate({ to: "/learn" });
               return;
             }
             toast.success("Demo account initialized!");
+            navigate({ to: "/learn" });
             return;
           }
 
@@ -113,6 +127,7 @@ function AuthPage() {
           );
           return;
         }
+        navigate({ to: "/learn" });
       }
     } finally {
       setLoading(false);
@@ -151,9 +166,11 @@ function AuthPage() {
               password: demoPassword,
             });
             toast.success("Signed in as Demo Learner (Mock Mode)!");
+            navigate({ to: "/learn" });
             return;
           }
           toast.success("Welcome! Demo account initialized.");
+          navigate({ to: "/learn" });
           return;
         }
 
@@ -164,10 +181,12 @@ function AuthPage() {
           password: demoPassword,
         });
         toast.success("Signed in as Demo Learner (Mock Mode)!");
+        navigate({ to: "/learn" });
         return;
       }
       
       toast.success("Signed in with demo account!");
+      navigate({ to: "/learn" });
     } catch (err) {
       console.warn("Demo login handler caught exception, falling back to mock:", err);
       localStorage.setItem("mathchines.mock_auth", "true");
@@ -176,6 +195,7 @@ function AuthPage() {
         password: demoPassword,
       });
       toast.success("Signed in as Demo Learner (Mock Mode)!");
+      navigate({ to: "/learn" });
     } finally {
       setLoading(false);
     }

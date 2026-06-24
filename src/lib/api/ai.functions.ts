@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 export const getAIExplanation = createServerFn({ method: "POST" })
-  .validator(
+  .inputValidator(
     z.object({
       topicTitle: z.string(),
       difficulty: z.string(),

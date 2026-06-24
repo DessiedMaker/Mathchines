@@ -98,22 +98,7 @@ graph LR
 > **Presenter Notes:**
 > The student loop is streamlined for high engagement. Upon onboarding, the curriculum compiler maps their path. An optional diagnostic placement quiz pinpoints gaps. Interactive practice adjusts question difficulty in real time, and any mistake immediately triggers explanatory step-by-step correction.
 
----
 
-# Monetization & Pricing
-
-### Calibrated for Global Affordability
-
-- **Free Tier**
-  - Access to 2 topics/week, placement quiz, and basic progress dashboards.
-- **Premium Student**
-  - `$4.99` / month (USD/Western) or **GHS 1–2 / day** via mobile carrier airtime micro-billing.
-  - _Includes:_ Unlimited lessons, offline mode, speed drills, and weekly parent reports.
-- **School Licensing**
-  - Custom annual seat licenses including a teacher dashboard, classroom analytics, and mock exams.
-
-> **Presenter Notes:**
-> Standard recurring credit card models fail in emerging markets due to low card penetration. Mathchines introduces mobile carrier airtime micro-billing—letting parents subscribe for pennies a day via their mobile carrier balance.
 
 ---
 

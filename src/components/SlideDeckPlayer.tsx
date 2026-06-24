@@ -17,6 +17,7 @@ import {
   X,
   Coins,
   TrendingUp,
+  ShieldCheck,
   Award,
   Globe2,
   ArrowRight,

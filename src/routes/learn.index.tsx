@@ -42,11 +42,24 @@ function LearnIndex() {
 
   // Load user details
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    const sessionPromise = supabase.auth.getSession();
+    const timeoutPromise = new Promise<{ data: { session: any } }>((resolve) => {
+      setTimeout(() => resolve({ data: { session: null } }), 1500);
+    });
+
+    Promise.race([sessionPromise, timeoutPromise]).then(({ data }) => {
       if (data.session) {
         setUserId(data.session.user.id);
         const p = getProgress();
         if (p.role) setRoleState(p.role);
+      } else {
+        // Fallback for mock session or offline
+        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        if (isMock) {
+          setUserId("demo-user-id");
+          const p = getProgress();
+          if (p.role) setRoleState(p.role);
+        }
       }
       setLoading(false);
     });

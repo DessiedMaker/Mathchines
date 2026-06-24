@@ -25,7 +25,8 @@ export const getDecks = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const generateDeckFromDocument = createServerFn({ method: "POST" })
-  .handler(async ({ data }: { data: { documentText: string } }) => {
+  .inputValidator(z.object({ documentText: z.string() }))
+  .handler(async ({ data }) => {
     const documentText = data?.documentText;
     if (!documentText || typeof documentText !== "string" || documentText.length < 10) {
       throw new Error("Document must be at least 10 characters long");
