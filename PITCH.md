@@ -72,14 +72,15 @@ Designed to showcase the core user experience, primary personas, and student suc
 
 ### Slide 7: MVP Success Metrics
 
-- **Subtitle**: KPIs to Validate our Core Hypothesis
-- **Key Visuals**: Gauge bars for target targets:
-  - Day 7 Retention: **40%**
-  - Lesson Completion: **60%**
-  - Assessment Attempt: **70%**
-  - Offline Sessions: **20%**
+- **Subtitle**: Key Performance Indicators for Core Validation
+- **Key Visuals**: Growth gauge bars:
+  - **Weekly Retention**: `≥ 45%` (validating gamification & streak systems).
+  - **Daily Active Time**: `15+ minutes` average (demonstrating active learning focus).
+  - **Math Score Gains**: `≥ 22%` improvement within 30 days (adaptive engine impact).
+  - **Offline Resilience**: `≥ 35%` session share (confirming offline-first value).
+  - **Sync Accuracy**: `100%` database sync of offline practice history.
 - **Presenter Notes**:
-  > To validate that Mathchines improves comprehension, we are measuring several key performance indicators. We're targeting a Day 7 retention of 40% or higher, a lesson completion rate of 60%, and an assessment attempt rate of 70%. At least 20% of sessions are expected to run offline, validating our offline-first architecture. Our ultimate success metric is achieving a 15% average learning gain in 30 days.
+  > Our success metrics are designed around pedagogical outcomes and structural efficiency. We target a Weekly Retention rate of 45% driven by streak loops, and an average of 15+ minutes of daily engagement. The primary metric is academic impact: validating a 22% average math score improvement in 30 days. We also expect at least 35% of student sessions to run offline in lower-infrastructure areas, with a 100% eventual data sync rate back to the cloud.
 
 ### Slide 8: Join the Revolution
 

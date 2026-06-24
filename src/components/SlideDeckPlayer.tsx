@@ -1028,10 +1028,10 @@ export function SlideDeckPlayer({
 
       if (titleLower.includes("metrics") || titleLower.includes("kpis")) {
         const gauges = [
-          { label: "Day 7 Retention", pct: "40%", bar: "w-[40%]", color: "bg-sky-500" },
-          { label: "Lesson Completion", pct: "60%", bar: "w-[60%]", color: "bg-emerald-500" },
-          { label: "Assessment Attempt", pct: "70%", bar: "w-[70%]", color: "bg-coral" },
-          { label: "Offline Sessions", pct: "20%", bar: "w-[20%]", color: "bg-amber-500" },
+          { label: "Weekly Retention", pct: "≥ 45%", bar: "w-[45%]", color: "bg-sky-500" },
+          { label: "Daily Active Time", pct: "15+ Min", bar: "w-[75%]", color: "bg-violet-500" },
+          { label: "Math Score Gains", pct: "≥ 22%", bar: "w-[65%]", color: "bg-emerald-500" },
+          { label: "Offline Resilience", pct: "≥ 35%", bar: "w-[35%]", color: "bg-amber-500" },
         ];
 
         return (

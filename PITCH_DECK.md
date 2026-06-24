@@ -122,18 +122,18 @@ graph LR
 
 ### Key Performance Indicators for Core Validation
 
-- **Engagement & Retention**
-  - Day 7 Retention: **≥ 40%**
-  - Lesson Completion Rate: **≥ 60%**
-- **Assessment & Support**
-  - Quiz Attempt Rate: **≥ 70%** (among lesson completers)
-  - Correction Engine Engagement: **≥ 50%**
-- **Infrastructure & Outcomes**
-  - Offline Sessions: **≥ 20%** of total usage
-  - 30-Day Learning Gain: **≥ 15%** average score improvement
+- **Learning Engagement & Stickiness**
+  - Week 1 User Retention: **≥ 45%** (driven by gamification & streak systems)
+  - Daily Active Duration: **15+ Minutes** average active learning focus
+- **Academic Performance & Adaptivity**
+  - 30-Day Learning Gain: **≥ 22%** average score improvement
+  - Adaptive Accuracy Rate: **≥ 80%** correct answer progression
+- **Offline Infrastructure Moat**
+  - Offline Sessions Share: **≥ 35%** of sessions (validating local cache utility)
+  - Delta Sync Success: **100%** database sync of offline practice records
 
 > **Presenter Notes:**
-> We have set clear benchmarks to measure value. We track user retention, completion metrics, and offline session frequencies. Most importantly, we aim to validate a minimum 15% average academic improvement within a student's first 30 days of use.
+> Our metrics prove both value and viability. We measure Week 1 retention to validate gamification, but the ultimate KPI is a 22% average score increase within 30 days. For infrastructure, targeting a 35% offline session share proves our software reaches low-connectivity students seamlessly.
 
 ---
 
