@@ -59,20 +59,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > The user journey is streamlined for maximum efficiency: users onboard by selecting their country and grade (which maps the app to their specific local syllabus, like Ghana's GES). They can take an optional 5-question Adaptive Placement Quiz to identify skill gaps. Once they select a topic, they watch a short tutor-led animated lesson, complete an adaptive practice set of 10 questions, receive immediate worked explanations for errors, and earn mastery badges to progress.
 
-### Slide 6: Competitive Benchmarks
-
-- **Subtitle**: Closing the Market Gaps
-- **Key Visuals**: Feature matrix comparing features:
-  | Core Features | Mathchines | IXL / SplashLearn | Khan Academy |
-  | :--- | :---: | :---: | :---: |
-  | African & Western Curricula | ✓ | ✕ | ✕ |
-  | Fully Offline Playback | ✓ | ✕ | ✕ |
-  | Daily Airtime Payments | ✓ | ✕ | ✕ |
-  | Interactive Error Correction | ✓ | ✓ | ✓ |
-- **Presenter Notes**:
-  > When we look at the landscape, competitors fall short in critical areas. Platforms like IXL or SplashLearn are expensive and require high-speed internet. Khan Academy is excellent but generic and lacks local curriculum integrations. Mathchines is the first platform purpose-built for both Western and African curricula, featuring robust offline syncing, and integrated daily airtime payments tailored for local purchasing power.
-
-### Slide 7: Monetization & Pricing
+### Slide 6: Monetization & Pricing
 
 - **Subtitle**: Calibrated for Global Affordability
 - **Key Visuals**: Tiers dashboard:
@@ -82,18 +69,18 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > Our monetization follows a freemium model. The Free tier offers full access to basic topics. Premium students unlock unlimited lessons, offline mode, and parent reports for $4.99/month, or a localized micro-payment of GHS 1-2 per day via mobile airtime. This airtime subscription is crucial for high conversion in Africa. Schools can also purchase bulk licenses which include a teacher analytics dashboard to monitor trouble spots.
 
-### Slide 8: Roadmap & Go-To-Market
+### Slide 7: Roadmap & Go-To-Market
 
 - **Subtitle**: Phase 1 - Phase 7 Lifecycle
 - **Key Visuals**: Gantt-style roadmap milestones:
-  - **Discovery (W1-3)**: Curriculum mapping & stack definition.
-  - **Design (W4-7)**: Wireframes, UI mockups, and adaptive engine specifications.
-  - **MVP Build (W8-18)**: Core engine build and offline database capabilities.
-  - **Launch (W23)**: Launch in Ghana and the US with integrated micro-airtime billing.
+  - **Discovery (W1-2)**: Curriculum mapping & stack definition.
+  - **Design (W3-4)**: Wireframes, UI mockups, and adaptive engine specifications.
+  - **MVP Build (W5-6) [In Progress]**: Core engine build and offline database capabilities.
+  - **Launch (W7)**: Launch in Ghana and the US with integrated micro-airtime billing.
 - **Presenter Notes**:
-  > Our proposed roadmap is divided into structured phases. We start with Phase 1-2: curriculum mapping and UX design. We build the core MVP in Weeks 8-18, followed by thorough beta testing in Ghana and the US. Launch is slated for Week 23, with post-MVP features like 1v1 Math-Off duels, Lightning Jams, and parent SMS reports releasing in subsequent months. By Phase 7, we expand to Nigeria, Kenya, and the UK.
+  > Our proposed roadmap is divided into structured phases. We start with Phase 1-2: curriculum mapping and UX design. We build the core MVP in Weeks 5-6 (currently in progress), followed by thorough beta testing in Ghana and the US. Launch is slated for Week 7, with post-MVP features like 1v1 Math-Off duels, Lightning Jams, and parent SMS reports releasing in subsequent months. By Phase 7, we expand to Nigeria, Kenya, and the UK.
 
-### Slide 9: MVP Success Metrics
+### Slide 8: MVP Success Metrics
 
 - **Subtitle**: KPIs to Validate our Core Hypothesis
 - **Key Visuals**: Gauge bars for target targets:
@@ -104,7 +91,7 @@ Designed to showcase the core user experience, primary personas, and student suc
 - **Presenter Notes**:
   > To validate that Mathchines improves comprehension, we are measuring several key performance indicators. We're targeting a Day 7 retention of 40% or higher, a lesson completion rate of 60%, and an assessment attempt rate of 70%. At least 20% of sessions are expected to run offline, validating our offline-first architecture. Our ultimate success metric is achieving a 15% average learning gain in 30 days.
 
-### Slide 10: Join the Revolution
+### Slide 9: Join the Revolution
 
 - **Subtitle**: Making Math Accessible to Every Mind
 - **Presenter Notes**:
@@ -183,10 +170,22 @@ Designed for venture capital presentations, highlighting scale economics, direct
   - **Curriculum Compiler**: Ingests national syllabi PDFs and builds structured adaptive paths in hours.
   - **Lightweight Client (PWA)**: Optimized for Android Go & low RAM devices (<3.5MB asset size).
   - **Supabase Delta Sync**: Saves logs locally in IndexDB, syncing in small packets when connected.
+  - **Supabase Authentication Moat**: Secure identity mapping with Email and Google OAuth integrations and Row-Level Security (RLS).
 - **Presenter Notes**:
   > Mathchines has built a proprietary technology stack. First, our Localized Curriculum Compiler allows us to ingest any national syllabus (like Ghana's GES or Nigeria's NERDC) via LLM mapping schemas and spit out a fully structured learning map in hours. Second, our client application is a lightweight Progressive Web App optimized for low-end $50 Android devices. It stores all lessons and quiz engines locally using IndexDB, syncing progress to our Supabase database in tiny JSON packets when connection allows.
 
-### Slide 8: Funding Request
+### Slide 8: Document-to-Deck AI Engine
+
+- **Subtitle**: AI Presentation & Lesson Compiler Moat
+- **Key Visuals**:
+  - **Markdown Parser**: Dynamic compilation of standard markdown slides into custom React viewports.
+  - **Gemini 2.5 Flash API Hook**: Direct conversion of text textbooks/notes into slides in seconds.
+  - **Client-Side Sorter & Copy**: Copying slides markdown, grid slide overview, and local markdown text loading.
+  - **Interactive Components Integration**: Automatic mapping of slide items into rich UI components (such as sliders, timelines, and concentric circles).
+- **Presenter Notes**:
+  > Educators struggle with building presentations. We have created a custom Document-to-Deck engine. By pairing our dynamic parser with Gemini 2.5 Flash, teachers can turn text documents into interactive web lessons, which acts as a powerful organic acquisition channel.
+
+### Slide 9: Funding Request
 
 - **Subtitle**: The $1.5M Seed Allocation
 - **Key Visuals**: Gauge bars for use of funds:
@@ -196,7 +195,7 @@ Designed for venture capital presentations, highlighting scale economics, direct
 - **Presenter Notes**:
   > We are raising a $1.5M Seed Round to accelerate our milestones over the next 18 months. We will allocate 45% ($675K) to Product Development and Core Engineering to refine our offline sync engine and build out the teacher analytics suite. 30% ($450K) will fund Telecom Partnerships, direct API integrations, and carrier-billing security. 25% ($375K) is set aside for Curriculum Expansion to support WAEC/NECO exams in Nigeria and expand GCSE support in the UK.
 
-### Slide 9: Roadmap & Exit
+### Slide 10: Roadmap & Exit
 
 - **Subtitle**: The 3-Year Scaling Lifecycle
 - **Presenter Notes**:

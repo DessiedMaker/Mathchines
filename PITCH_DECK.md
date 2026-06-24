@@ -100,23 +100,6 @@ graph LR
 
 ---
 
-# Competitive Benchmarks
-
-### Closing Critical Market Gaps
-
-| Core Capabilities                 | Mathchines  | IXL / SplashLearn | Khan Academy |
-| :-------------------------------- | :---------: | :---------------: | :----------: |
-| **African & Western Syllabi**     | **Yes (✓)** |      No (✕)       |    No (✕)    |
-| **100% Offline Video & Quizzes**  | **Yes (✓)** |      No (✕)       |    No (✕)    |
-| **Telecom Airtime Payments**      | **Yes (✓)** |      No (✕)       |    No (✕)    |
-| **Adaptive Difficulty Engine**    | **Yes (✓)** |      Yes (✓)      |   Yes (✓)    |
-| **Intelligent Error Explanation** | **Yes (✓)** |      Yes (✓)      |   Yes (✓)    |
-
-> **Presenter Notes:**
-> Existing platforms are either generic or expensive and assume perfect internet. Mathchines is built to bridge both worlds. We combine standard adaptive pedagogy with off-grid capability and local mobile payment integrations.
-
----
-
 # Monetization & Pricing
 
 ### Calibrated for Global Affordability
@@ -138,15 +121,15 @@ graph LR
 
 ### Discovery to Global Scaling
 
-- **Phase 1: Discovery (Weeks 1–3)** · Syllabus compilation models (GES & CCSS) and design system.
-- **Phase 2: Design (Weeks 4–7)** · UI/UX templates, wireframes, and adaptive engine specifications.
-- **Phase 3: MVP Build (Weeks 8–18)** · Offline Sync DB, adaptive practice engine, airtime billing API hooks.
-- **Phase 4: Beta (Weeks 19–22)** · Core testing with students in Ghana and the US.
-- **Phase 5: Launch (Week 23)** · Public roll-out in West Africa and North America.
-- **Phase 6: Post-MVP (Weeks 24–36)** · 1v1 Arena, parent SMS portals, and Lightning Jams.
+- **Phase 1: Discovery (Weeks 1–2)** · Syllabus compilation models (GES & CCSS) and design system.
+- **Phase 2: Design (Weeks 3–4)** · UI/UX templates, wireframes, and adaptive engine specifications.
+- **Phase 3: MVP Build (Weeks 5–6) [In Progress]** · Offline Sync DB, adaptive practice engine, airtime billing API hooks.
+- **Phase 4: Beta (Week 7)** · Core testing with students in Ghana and the US.
+- **Phase 5: Launch (Week 7)** · Public roll-out in West Africa and North America.
+- **Phase 6: Post-MVP (Weeks 8–15)** · 1v1 Arena, parent SMS portals, and Lightning Jams.
 
 > **Presenter Notes:**
-> Our roadmap is built on systematic verification. We start with curriculum mapping, build core engines during weeks 8-18, conduct beta validation on low-end hardware, and launch publicly in Week 23, immediately unlocking the mobile airtime billing layer.
+> Our roadmap is built on systematic verification. We start with curriculum mapping, build core engines during weeks 5-6 (which we are currently working on), conduct beta validation on low-end hardware, and launch publicly in Week 7, immediately unlocking the mobile airtime billing layer.
 
 ---
 
@@ -314,9 +297,25 @@ Model projections based on active monthly user scale, conversions, and blended m
   - Optimized Progressive Web App (PWA) with a bundle size of **<3.5MB**. Runs smoothly on budget Android Go devices with 1-2GB RAM.
 - **Supabase Delta Sync**
   - Stores user telemetry and quiz metrics locally via IndexDB, syncing in small JSON packets when cellular signals are active.
+- **Supabase Authentication Moat**
+  - Secure identity mappings with standard Email and Google OAuth integrations, shielded behind Row-Level Security (RLS) data policies.
 
 > **Presenter Notes:**
-> Our technology moat is designed for device constraints. A sub-3.5MB client runs on low-end hardware, our custom compiler structures content quickly, and delta syncing ensures offline progress is uploaded in tiny files when a signal returns.
+> Our technology moat is designed for device constraints and security. A sub-3.5MB client runs on low-end hardware, our custom compiler structures content quickly, delta syncing ensures offline progress is uploaded in tiny files when a signal returns, and student records are guarded with secure Supabase authentication.
+
+---
+
+# Document-to-Deck AI Engine
+
+### AI Presentation & Lesson Compiler Moat
+
+- **Marp-Compatible Markdown Parser** · Dynamically turns standard markdown slides into interactive, high-fidelity React screens.
+- **Gemini 2.5 Flash API Hook** · Allows teachers to upload textbooks, notes, or lesson guides to compile structured slide decks in seconds.
+- **Client-Side Sorter & Copy** · Fully interactive slides player with instant preview, slide management, and clipboard sharing.
+- **Interactive UI Injection** · Automatically maps slide content into premium custom interfaces (such as charts, simulators, and steps).
+
+> **Presenter Notes:**
+> Educators struggle with building presentations. We have created a custom Document-to-Deck engine. By pairing our dynamic parser with Gemini 2.5 Flash, teachers can turn text documents into interactive web lessons, which acts as a powerful organic acquisition channel.
 
 ---
 

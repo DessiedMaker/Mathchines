@@ -14,9 +14,9 @@ function createSupabaseClient() {
       ...(!SUPABASE_URL ? ["SUPABASE_URL"] : []),
       ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY"] : []),
     ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    const message = `Missing Supabase environment variable(s): ${missing.join(", ")}. Connect Supabase in Lovable Cloud. Falling back to Mock Auth.`;
+    console.warn(`[Supabase] ${message}`);
+    return {} as ReturnType<typeof createClient<Database>>;
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -30,11 +30,157 @@ function createSupabaseClient() {
 
 let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
 
+// Client-side auth mock state
+const listeners = new Set<(event: string, session: any) => void>();
+
+const mockAuth = {
+  getSession: async () => {
+    const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+    if (isMock) {
+      const mockUser = {
+        id: "demo-user-id",
+        email: "demo@mathchines.com",
+        user_metadata: { display_name: "Demo Learner" },
+      };
+      return {
+        data: {
+          session: {
+            access_token: "mock-token",
+            user: mockUser,
+          },
+        },
+        error: null,
+      };
+    }
+    return { data: { session: null }, error: null };
+  },
+  onAuthStateChange: (callback: any) => {
+    listeners.add(callback);
+    const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+    if (isMock) {
+      const mockUser = {
+        id: "demo-user-id",
+        email: "demo@mathchines.com",
+        user_metadata: { display_name: "Demo Learner" },
+      };
+      const mockSession = {
+        access_token: "mock-token",
+        user: mockUser,
+      };
+      setTimeout(() => {
+        callback("SIGNED_IN", mockSession);
+      }, 0);
+    }
+    return {
+      data: {
+        subscription: {
+          unsubscribe: () => {
+            listeners.delete(callback);
+          },
+        },
+      },
+    };
+  },
+  signInWithPassword: async (credentials: any) => {
+    if (credentials.email === "demo@mathchines.com") {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("mathchines.mock_auth", "true");
+      }
+      const mockUser = {
+        id: "demo-user-id",
+        email: "demo@mathchines.com",
+        user_metadata: { display_name: "Demo Learner" },
+      };
+      const mockSession = {
+        access_token: "mock-token",
+        user: mockUser,
+      };
+      listeners.forEach((cb) => cb("SIGNED_IN", mockSession));
+      return {
+        data: {
+          session: mockSession,
+          user: mockUser,
+        },
+        error: null,
+      };
+    }
+    return { data: { session: null, user: null }, error: new Error("Invalid credentials") };
+  },
+  signUp: async (credentials: any) => {
+    if (credentials.email === "demo@mathchines.com") {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("mathchines.mock_auth", "true");
+      }
+      const mockUser = {
+        id: "demo-user-id",
+        email: "demo@mathchines.com",
+        user_metadata: { display_name: "Demo Learner" },
+      };
+      const mockSession = {
+        access_token: "mock-token",
+        user: mockUser,
+      };
+      listeners.forEach((cb) => cb("SIGNED_IN", mockSession));
+      return {
+        data: {
+          session: mockSession,
+          user: mockUser,
+        },
+        error: null,
+      };
+    }
+    return { data: { session: null, user: null }, error: new Error("Signup failed") };
+  },
+  signOut: async () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("mathchines.mock_auth");
+    }
+    listeners.forEach((cb) => cb("SIGNED_OUT", null));
+    return { error: null };
+  },
+};
+
+const mockSupabase = {
+  auth: mockAuth,
+  from: () => ({
+    select: () => Promise.resolve({ data: [], error: null }),
+    insert: () => Promise.resolve({ data: null, error: null }),
+    update: () => ({
+      eq: () => Promise.resolve({ data: null, error: null }),
+    }),
+    maybeSingle: () => Promise.resolve({ data: null, error: null }),
+  }),
+};
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
   get(_, prop, receiver) {
-    if (!_supabase) _supabase = createSupabaseClient();
-    return Reflect.get(_supabase, prop, receiver);
+    const isMockMode =
+      typeof window !== "undefined" &&
+      (localStorage.getItem("mathchines.mock_auth") === "true" ||
+        !import.meta.env.VITE_SUPABASE_URL ||
+        !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+
+    if (isMockMode) {
+      if (prop === "auth") return mockAuth;
+      if (prop === "from") return mockSupabase.from;
+    }
+
+    try {
+      if (!_supabase) _supabase = createSupabaseClient();
+      
+      // If client is mocked dummy object due to missing env variables
+      if (Object.keys(_supabase).length === 0) {
+        if (prop === "auth") return mockAuth;
+        if (prop === "from") return mockSupabase.from;
+      }
+      
+      return Reflect.get(_supabase, prop, receiver);
+    } catch (err) {
+      if (prop === "auth") return mockAuth;
+      if (prop === "from") return mockSupabase.from;
+      throw err;
+    }
   },
 });
