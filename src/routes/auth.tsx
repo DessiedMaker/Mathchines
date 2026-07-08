@@ -26,8 +26,33 @@ const signInSchema = z.object({
   password: z.string().min(6, "At least 6 characters").max(72),
 });
 
-const signUpSchema = signInSchema.extend({
-  displayName: z.string().trim().min(1, "Required").max(60),
+const signUpSchema = z.object({
+  email: z.string().trim().email("Invalid email").max(255),
+  displayName: z
+    .string()
+    .trim()
+    .min(2, "Display name must be at least 2 characters")
+    .max(60, "Display name must be at most 60 characters")
+    .regex(
+      /^[a-zA-Z0-9\s-_]+$/,
+      "Display name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(72, "Password must be at most 72 characters")
+    .refine((val) => /[a-z]/.test(val) && /[A-Z]/.test(val), {
+      message: "Password must contain both uppercase and lowercase letters",
+    })
+    .refine((val) => /\d/.test(val), {
+      message: "Password must contain at least one number",
+    })
+    .refine((val) => /[^A-Za-z0-9]/.test(val), {
+      message: "Password must contain at least one special character",
+    })
+    .refine((val) => !/password/i.test(val) && !/12345/i.test(val), {
+      message: "Password contains forbidden patterns or common words",
+    }),
 });
 
 function isConnectionError(error: any): boolean {
@@ -314,18 +339,44 @@ function AuthPage() {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === "signup" && (
-              <div className="relative">
-                <UserIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  required
-                  maxLength={60}
-                  placeholder="Display name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-background px-10 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
+              <>
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="text"
+                    required
+                    maxLength={60}
+                    placeholder="Display name"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="w-full rounded-lg border border-border bg-background px-10 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+                {displayName.length > 0 && (
+                  <div className="mt-1 mb-2 bg-muted/40 p-2.5 rounded-lg border border-border/50 text-xs space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      <div
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          displayName.trim().length >= 2 ? "bg-green-500" : "bg-muted-foreground/40"
+                        }`}
+                      />
+                      <span className={displayName.trim().length >= 2 ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                        At least 2 characters
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          /^[a-zA-Z0-9\s-_]+$/.test(displayName) ? "bg-green-500" : "bg-red-500 animate-pulse"
+                        }`}
+                      />
+                      <span className={/^[a-zA-Z0-9\s-_]+$/.test(displayName) ? "text-green-500 font-medium" : "text-red-500 font-semibold"}>
+                        Only letters, numbers, spaces, hyphens, and underscores
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -344,7 +395,7 @@ function AuthPage() {
               <input
                 type="password"
                 required
-                minLength={6}
+                minLength={mode === "signin" ? 6 : 8}
                 maxLength={72}
                 autoComplete={mode === "signin" ? "current-password" : "new-password"}
                 placeholder="Password"
@@ -353,6 +404,71 @@ function AuthPage() {
                 className="w-full rounded-lg border border-border bg-background px-10 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
+            {mode === "signup" && password.length > 0 && (
+              <div className="mt-1 mb-3 bg-muted/40 p-3 rounded-lg border border-border/50 text-xs space-y-1.5">
+                <p className="font-semibold text-muted-foreground mb-1 text-[11px]">Password Requirements:</p>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
+                      password.length >= 8 ? "bg-green-500" : "bg-muted-foreground/35"
+                    }`}
+                  >
+                    ✓
+                  </div>
+                  <span className={password.length >= 8 ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                    At least 8 characters ({password.length}/8)
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
+                      /[a-z]/.test(password) && /[A-Z]/.test(password) ? "bg-green-500" : "bg-muted-foreground/35"
+                    }`}
+                  >
+                    ✓
+                  </div>
+                  <span className={/[a-z]/.test(password) && /[A-Z]/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                    Both uppercase & lowercase letters
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
+                      /\d/.test(password) ? "bg-green-500" : "bg-muted-foreground/35"
+                    }`}
+                  >
+                    ✓
+                  </div>
+                  <span className={/\d/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                    At least one number
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
+                      /[^A-Za-z0-9]/.test(password) ? "bg-green-500" : "bg-muted-foreground/35"
+                    }`}
+                  >
+                    ✓
+                  </div>
+                  <span className={/[^A-Za-z0-9]/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                    At least one special character
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
+                      (!/password/i.test(password) && !/12345/i.test(password)) ? "bg-green-500" : "bg-red-500"
+                    }`}
+                  >
+                    {(!/password/i.test(password) && !/12345/i.test(password)) ? "✓" : "✗"}
+                  </div>
+                  <span className={(!/password/i.test(password) && !/12345/i.test(password)) ? "text-green-500 font-medium" : "text-red-500 font-semibold"}>
+                    No common words (e.g. "password", "12345")
+                  </span>
+                </div>
+              </div>
+            )}
             <button
               type="submit"
               disabled={loading}
@@ -373,7 +489,15 @@ function AuthPage() {
             {mode === "signin" ? "New to Mathchines? " : "Already have an account? "}
             <button
               type="button"
-              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+              onClick={() => {
+                const nextMode = mode === "signin" ? "signup" : "signin";
+                setMode(nextMode);
+                if (nextMode === "signup") {
+                  setPassword("");
+                } else {
+                  setPassword("password123");
+                }
+              }}
               className="font-medium text-primary hover:underline"
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
