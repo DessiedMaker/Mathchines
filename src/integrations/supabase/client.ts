@@ -33,15 +33,24 @@ let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
 // Client-side auth mock state
 const listeners = new Set<(event: string, session: any) => void>();
 
+function getActiveMockUser() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("mathchines.mock_user");
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return {
+    id: "demo-user-id",
+    email: "demo@mathchines.com",
+    user_metadata: { display_name: "Demo Learner" },
+  };
+}
+
 const mockAuth = {
   getSession: async () => {
     const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
     if (isMock) {
-      const mockUser = {
-        id: "demo-user-id",
-        email: "demo@mathchines.com",
-        user_metadata: { display_name: "Demo Learner" },
-      };
+      const mockUser = getActiveMockUser();
       return {
         data: {
           session: {
@@ -58,11 +67,7 @@ const mockAuth = {
     listeners.add(callback);
     const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
     if (isMock) {
-      const mockUser = {
-        id: "demo-user-id",
-        email: "demo@mathchines.com",
-        user_metadata: { display_name: "Demo Learner" },
-      };
+      const mockUser = getActiveMockUser();
       const mockSession = {
         access_token: "mock-token",
         user: mockUser,
@@ -82,15 +87,29 @@ const mockAuth = {
     };
   },
   signInWithPassword: async (credentials: any) => {
-    if (credentials.email === "demo@mathchines.com") {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("mathchines.mock_auth", "true");
-      }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mathchines.mock_auth", "true");
+      
+      let displayName = "Learner";
+      try {
+        const usersRaw = localStorage.getItem("mathchines.mock_registered_users");
+        const users = usersRaw ? JSON.parse(usersRaw) : {};
+        if (users[credentials.email]) {
+          displayName = users[credentials.email].displayName;
+        } else {
+          const namePart = credentials.email.split("@")[0];
+          displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+        }
+      } catch {}
+      
       const mockUser = {
-        id: "demo-user-id",
-        email: "demo@mathchines.com",
-        user_metadata: { display_name: "Demo Learner" },
+        id: "mock-user-" + Math.random().toString(36).substring(2, 9),
+        email: credentials.email,
+        user_metadata: { display_name: displayName },
       };
+      
+      localStorage.setItem("mathchines.mock_user", JSON.stringify(mockUser));
+      
       const mockSession = {
         access_token: "mock-token",
         user: mockUser,
@@ -107,15 +126,26 @@ const mockAuth = {
     return { data: { session: null, user: null }, error: new Error("Invalid credentials") };
   },
   signUp: async (credentials: any) => {
-    if (credentials.email === "demo@mathchines.com") {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("mathchines.mock_auth", "true");
-      }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mathchines.mock_auth", "true");
+      
+      const displayName = credentials.options?.data?.display_name || "Learner";
+      
+      try {
+        const usersRaw = localStorage.getItem("mathchines.mock_registered_users");
+        const users = usersRaw ? JSON.parse(usersRaw) : {};
+        users[credentials.email] = { displayName };
+        localStorage.setItem("mathchines.mock_registered_users", JSON.stringify(users));
+      } catch {}
+      
       const mockUser = {
-        id: "demo-user-id",
-        email: "demo@mathchines.com",
-        user_metadata: { display_name: "Demo Learner" },
+        id: "mock-user-" + Math.random().toString(36).substring(2, 9),
+        email: credentials.email,
+        user_metadata: { display_name: displayName },
       };
+      
+      localStorage.setItem("mathchines.mock_user", JSON.stringify(mockUser));
+      
       const mockSession = {
         access_token: "mock-token",
         user: mockUser,
@@ -134,18 +164,20 @@ const mockAuth = {
   signOut: async () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("mathchines.mock_auth");
+      localStorage.removeItem("mathchines.mock_user");
     }
     listeners.forEach((cb) => cb("SIGNED_OUT", null));
     return { error: null };
   },
   getClaims: async (token: string) => {
     if (token === "mock-token") {
+      const activeUser = getActiveMockUser();
       return {
         data: {
           claims: {
-            sub: "demo-user-id",
-            email: "demo@mathchines.com",
-            user_metadata: { display_name: "Demo Learner" },
+            sub: activeUser?.id || "demo-user-id",
+            email: activeUser?.email || "demo@mathchines.com",
+            user_metadata: activeUser?.user_metadata || { display_name: "Demo Learner" },
           },
         },
         error: null,
@@ -153,18 +185,73 @@ const mockAuth = {
     }
     return { data: null, error: new Error("Invalid token") };
   },
+  setSession: async (tokens: any) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("mathchines.mock_auth", "true");
+    }
+    const mockUser = getActiveMockUser();
+    const mockSession = {
+      access_token: "mock-token",
+      user: mockUser,
+    };
+    listeners.forEach((cb) => cb("SIGNED_IN", mockSession));
+    return {
+      data: {
+        session: mockSession,
+        user: mockUser,
+      },
+      error: null,
+    };
+  },
 };
+
+class MockQueryBuilder {
+  private tableName: string;
+  private queryData: any;
+  private queryError: any = null;
+
+  constructor(tableName: string) {
+    this.tableName = tableName;
+    if (tableName === "profiles") {
+      this.queryData = null;
+    } else if (tableName === "classrooms") {
+      this.queryData = { id: "mock-class-id", name: "Demo Math Class", code: "DEMO101" };
+    } else {
+      this.queryData = [];
+    }
+  }
+
+  select(...args: any[]) { return this; }
+  insert(...args: any[]) { return this; }
+  update(...args: any[]) { return this; }
+  delete(...args: any[]) { return this; }
+  eq(...args: any[]) {
+    if (this.tableName === "classrooms" && args[0] === "code" && typeof args[1] === "string") {
+      this.queryData = { id: "mock-class-id", name: "Demo Math Class", code: args[1] };
+    }
+    return this;
+  }
+  neq(...args: any[]) { return this; }
+  gt(...args: any[]) { return this; }
+  lt(...args: any[]) { return this; }
+  gte(...args: any[]) { return this; }
+  lte(...args: any[]) { return this; }
+  like(...args: any[]) { return this; }
+  ilike(...args: any[]) { return this; }
+  in(...args: any[]) { return this; }
+  order(...args: any[]) { return this; }
+  limit(...args: any[]) { return this; }
+  single() { return this; }
+  maybeSingle() { return this; }
+
+  then(onfulfilled?: (value: { data: any; error: any }) => any, onrejected?: (reason: any) => any) {
+    return Promise.resolve({ data: this.queryData, error: this.queryError }).then(onfulfilled, onrejected);
+  }
+}
 
 const mockSupabase = {
   auth: mockAuth,
-  from: () => ({
-    select: () => Promise.resolve({ data: [], error: null }),
-    insert: () => Promise.resolve({ data: null, error: null }),
-    update: () => ({
-      eq: () => Promise.resolve({ data: null, error: null }),
-    }),
-    maybeSingle: () => Promise.resolve({ data: null, error: null }),
-  }),
+  from: (tableName: string) => new MockQueryBuilder(tableName) as any,
 };
 
 // Import the supabase client like this:

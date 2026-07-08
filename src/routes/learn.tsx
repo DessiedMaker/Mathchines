@@ -120,6 +120,17 @@ function getInitialUser(): User | null {
   if (typeof window === "undefined") return null;
   const isMock = localStorage.getItem("mathchines.mock_auth") === "true";
   if (isMock) {
+    try {
+      const rawUser = localStorage.getItem("mathchines.mock_user");
+      if (rawUser) {
+        const parsed = JSON.parse(rawUser);
+        return {
+          id: parsed.id || "demo-user-id",
+          email: parsed.email || "demo@mathchines.com",
+          user_metadata: { display_name: parsed.user_metadata?.display_name || parsed.display_name || "Demo Learner" },
+        } as any;
+      }
+    } catch {}
     return {
       id: "demo-user-id",
       email: "demo@mathchines.com",
@@ -195,7 +206,7 @@ function LearnLayout() {
         if (!data.session) {
           const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
           if (isMock) {
-            setUser({ id: "demo-user-id", email: "demo@mathchines.com", user_metadata: { display_name: "Demo Learner" } } as any);
+            setUser(getInitialUser());
             setRoleState(getProgress().role || null);
           } else {
             navigate({ to: "/auth" });
@@ -222,7 +233,7 @@ function LearnLayout() {
         console.error("Auth init failed, falling back to local progress:", err);
         const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
         if (isMock) {
-          setUser({ id: "demo-user-id", email: "demo@mathchines.com", user_metadata: { display_name: "Demo Learner" } } as any);
+          setUser(getInitialUser());
           setRoleState(getProgress().role || null);
         } else {
           navigate({ to: "/auth" });

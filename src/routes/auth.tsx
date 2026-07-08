@@ -30,6 +30,19 @@ const signUpSchema = signInSchema.extend({
   displayName: z.string().trim().min(1, "Required").max(60),
 });
 
+function isConnectionError(error: any): boolean {
+  if (!error) return false;
+  const msg = (error.message || "").toLowerCase();
+  return (
+    msg.includes("typo in the url") ||
+    msg.includes("failed to fetch") ||
+    msg.includes("network") ||
+    msg.includes("load failed") ||
+    msg.includes("unreachable") ||
+    msg.includes("connection")
+  );
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -70,7 +83,7 @@ function AuthPage() {
           toast.error(parsed.error.issues[0].message);
           return;
         }
-        const { error } = await supabase.auth.signUp({
+        let { error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
@@ -79,6 +92,24 @@ function AuthPage() {
           },
         });
         if (error) {
+          if (isConnectionError(error)) {
+            console.warn("Supabase connection failed, falling back to mock auth:", error);
+            localStorage.setItem("mathchines.mock_auth", "true");
+            const result = await supabase.auth.signUp({
+              email: parsed.data.email,
+              password: parsed.data.password,
+              options: {
+                data: { display_name: parsed.data.displayName },
+              },
+            });
+            if (result.error) {
+              toast.error(result.error.message);
+              return;
+            }
+            toast.success("Account created locally (Mock Mode)!");
+            navigate({ to: "/learn" });
+            return;
+          }
           if (error.message.toLowerCase().includes("already")) {
             toast.error("This email is already registered. Try signing in.");
           } else toast.error(error.message);
@@ -92,11 +123,26 @@ function AuthPage() {
           toast.error(parsed.error.issues[0].message);
           return;
         }
-        const { error } = await supabase.auth.signInWithPassword({
+        let { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
           password: parsed.data.password,
         });
         if (error) {
+          if (isConnectionError(error)) {
+            console.warn("Supabase connection failed, falling back to mock auth:", error);
+            localStorage.setItem("mathchines.mock_auth", "true");
+            const result = await supabase.auth.signInWithPassword({
+              email: parsed.data.email,
+              password: parsed.data.password,
+            });
+            if (result.error) {
+              toast.error(result.error.message);
+              return;
+            }
+            toast.success("Signed in locally (Mock Mode)!");
+            navigate({ to: "/learn" });
+            return;
+          }
           if (parsed.data.email === "demo@mathchines.com" && parsed.data.password === "password123") {
             const { error: signUpError } = await supabase.auth.signUp({
               email: parsed.data.email,

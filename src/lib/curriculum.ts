@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { RAW_COUNTRIES } from "./countriesData";
 
 export type Difficulty = "Foundational" | "Standard" | "Challenge";
 
@@ -39,7 +40,7 @@ const fractionsTopic: Topic = {
   id: "fractions-basics",
   title: "Fractions: Add & Subtract",
   objective: "Add and subtract fractions with like and unlike denominators.",
-  videoUrl: "https://www.youtube.com/embed/qFK6If4tyKY",
+  videoUrl: "https://www.youtube.com/embed/CoCmsyFQ_Xc",
   workedExamples: [
     {
       title: "Example 1 — Like denominators",
@@ -351,54 +352,50 @@ const geometryTopic: Topic = {
 
 const sharedTopics = [fractionsTopic, algebraTopic, geometryTopic];
 
-export const COUNTRIES: Country[] = [
-  {
-    code: "GH",
-    name: "Ghana",
-    flag: "🇬🇭",
-    curriculum: "GES / WAEC",
-    grades: [
-      { id: "jhs1", label: "JHS 1", topics: sharedTopics },
-      { id: "jhs2", label: "JHS 2", topics: sharedTopics },
-      { id: "jhs3", label: "JHS 3 (BECE)", topics: sharedTopics },
-      { id: "shs1", label: "SHS 1", topics: sharedTopics },
-    ],
-  },
-  {
-    code: "NG",
-    name: "Nigeria",
-    flag: "🇳🇬",
-    curriculum: "NERDC / WAEC",
-    grades: [
-      { id: "jss2", label: "JSS 2", topics: sharedTopics },
-      { id: "jss3", label: "JSS 3", topics: sharedTopics },
-      { id: "ss1", label: "SS 1", topics: sharedTopics },
-    ],
-  },
-  {
-    code: "US",
-    name: "United States",
-    flag: "🇺🇸",
-    curriculum: "Common Core",
-    grades: [
-      { id: "g6", label: "Grade 6", topics: sharedTopics },
-      { id: "g7", label: "Grade 7", topics: sharedTopics },
-      { id: "g8", label: "Grade 8", topics: sharedTopics },
-      { id: "g9", label: "Grade 9 (Algebra I)", topics: sharedTopics },
-    ],
-  },
-  {
-    code: "UK",
-    name: "United Kingdom",
-    flag: "🇬🇧",
-    curriculum: "GCSE",
-    grades: [
-      { id: "y8", label: "Year 8", topics: sharedTopics },
-      { id: "y9", label: "Year 9", topics: sharedTopics },
-      { id: "y10", label: "Year 10 (GCSE)", topics: sharedTopics },
-    ],
-  },
-];
+export function getFallbackTopicsForGrade(totalGrades: number, index: number): Topic[] {
+  if (totalGrades === 3) {
+    if (index === 0) return [fractionsTopic];
+    if (index === 1) return [geometryTopic];
+    return [algebraTopic];
+  } else if (totalGrades === 4) {
+    if (index === 0) return [fractionsTopic];
+    if (index === 1) return [fractionsTopic, geometryTopic];
+    if (index === 2) return [geometryTopic, algebraTopic];
+    return [algebraTopic];
+  }
+  return sharedTopics;
+}
+
+export function sortGrades(grades: any[]): any[] {
+  const getWeight = (id: string) => {
+    if (id.endsWith("-6eme")) return 1;
+    if (id.endsWith("-5eme")) return 2;
+    if (id.endsWith("-4eme")) return 3;
+    if (id.endsWith("-3eme")) return 4;
+    if (id === "y8") return 8;
+    if (id === "y9") return 9;
+    if (id === "y10") return 10;
+    if ((id.includes("shs") || id.includes("ss")) && !id.includes("jss")) {
+      const match = id.match(/\d+/);
+      return 10 + (match ? parseInt(match[0], 10) : 0);
+    }
+    const match = id.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
+  return [...grades].sort((a, b) => getWeight(a.id) - getWeight(b.id));
+}
+
+export const COUNTRIES: Country[] = RAW_COUNTRIES.map((rc) => ({
+  code: rc.code,
+  name: rc.name,
+  flag: rc.flag,
+  curriculum: rc.curriculum,
+  grades: rc.grades.map((g, index) => ({
+    id: g.id,
+    label: g.label,
+    topics: getFallbackTopicsForGrade(rc.grades.length, index),
+  })),
+}));
 
 let dbCountries: Country[] | null = null;
 let dbTopics: Topic[] | null = null;
@@ -454,10 +451,12 @@ export async function loadCurriculumFromDatabase() {
     // Build countries structure
     const countriesList: Country[] = [];
     for (const c of curriculaData) {
-      const countryGrades = gradesData.filter((g: any) => g.country_code === c.code);
+      const unsortedGrades = gradesData.filter((g: any) => g.country_code === c.code);
+      const countryGrades = sortGrades(unsortedGrades);
       const gradesList: Grade[] = [];
 
-      for (const g of countryGrades) {
+      for (let index = 0; index < countryGrades.length; index++) {
+        const g = countryGrades[index];
         const gradeTopicIds = mappingData
           .filter((m: any) => m.grade_id === g.id)
           .map((m: any) => m.topic_id);
@@ -471,7 +470,10 @@ export async function loadCurriculumFromDatabase() {
         gradesList.push({
           id: g.id,
           label: g.label,
-          topics: gradeTopicsList,
+          topics:
+            gradeTopicsList.length > 0
+              ? gradeTopicsList
+              : getFallbackTopicsForGrade(countryGrades.length, index),
         });
       }
 
@@ -484,8 +486,12 @@ export async function loadCurriculumFromDatabase() {
       });
     }
 
-    dbCountries = countriesList;
-    dbTopics = Array.from(topicsMap.values());
+    if (countriesList.length > 0) {
+      dbCountries = countriesList;
+    }
+    if (topicsMap.size > 0) {
+      dbTopics = Array.from(topicsMap.values());
+    }
     console.log("Successfully loaded curriculum from Supabase database:", dbCountries);
   } catch (err) {
     console.warn(
@@ -496,11 +502,19 @@ export async function loadCurriculumFromDatabase() {
 }
 
 export function getCountriesList(): Country[] {
-  return dbCountries || COUNTRIES;
+  const dbList = dbCountries || [];
+  const merged = [...dbList];
+  for (const staticC of COUNTRIES) {
+    if (!merged.some((c) => c.code === staticC.code)) {
+      merged.push(staticC);
+    }
+  }
+  return merged.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function getCountry(code: string): Country | undefined {
-  return (dbCountries || COUNTRIES).find((c) => c.code === code);
+  const list = getCountriesList();
+  return list.find((c) => c.code === code);
 }
 
 export function getGrade(countryCode: string, gradeId: string): Grade | undefined {

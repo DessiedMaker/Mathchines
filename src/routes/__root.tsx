@@ -93,12 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "manifest",
-        href: "/manifest.json",
+        href: "manifest.json",
       },
       {
         rel: "icon",
         type: "image/png",
-        href: "/pi-logo.png",
+        href: "pi-logo.png",
       },
     ],
   }),

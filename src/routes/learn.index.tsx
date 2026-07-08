@@ -19,6 +19,7 @@ import {
   Mail,
   User as UserIcon,
   Trash2,
+  Search,
 } from "lucide-react";
 
 export const Route = createFileRoute("/learn/")({
@@ -56,7 +57,15 @@ function LearnIndex() {
         // Fallback for mock session or offline
         const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
         if (isMock) {
-          setUserId("demo-user-id");
+          let mockId = "demo-user-id";
+          try {
+            const rawUser = localStorage.getItem("mathchines.mock_user");
+            if (rawUser) {
+              const parsed = JSON.parse(rawUser);
+              if (parsed.id) mockId = parsed.id;
+            }
+          } catch {}
+          setUserId(mockId);
           const p = getProgress();
           if (p.role) setRoleState(p.role);
         }
@@ -119,6 +128,8 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
   const [classCode, setClassCode] = useState("");
   const [joining, setJoining] = useState(false);
   const [classrooms, setClassrooms] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const p = getProgress();
@@ -220,31 +231,142 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Country
             </h3>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {getCountriesList().map((c) => {
-                const active = c.code === country;
-                return (
+            {/* Featured Quick Select */}
+            <div className="mt-4">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Featured Countries
+              </h4>
+              <div className="mt-2 grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+                {getCountriesList()
+                  .filter((c) => ["GH", "NG", "US", "GB", "CA", "AU", "IN"].includes(c.code))
+                  .map((c) => {
+                    const active = c.code === country;
+                    return (
+                      <button
+                        key={c.code}
+                        type="button"
+                        onClick={() => {
+                          setCountry(c.code);
+                          setGrade("");
+                        }}
+                        className={`relative rounded-xl border p-3 text-left transition-all ${
+                          active
+                            ? "border-primary bg-primary/5 shadow-sm"
+                            : "border-border bg-card hover:border-foreground/20"
+                        }`}
+                      >
+                        <span className="text-xl">{c.flag}</span>
+                        <div className="mt-1 font-semibold text-xs truncate">{c.name}</div>
+                        <div className="text-[9px] text-muted-foreground truncate">{c.curriculum}</div>
+                        {active && (
+                          <CheckCircle2 className="absolute right-2 top-2 h-3.5 w-3.5 text-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+
+            {/* Custom selected indicator if non-featured */}
+            {!["GH", "NG", "US", "GB", "CA", "AU", "IN"].includes(country) && selectedCountry && (
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-primary bg-primary/5 p-3.5 shadow-sm animate-in fade-in zoom-in duration-200">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{selectedCountry.flag}</span>
+                  <div>
+                    <div className="font-semibold text-xs">{selectedCountry.name}</div>
+                    <div className="text-[9px] text-muted-foreground">{selectedCountry.curriculum}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[9px] font-semibold text-primary">
+                    Selected
+                  </span>
                   <button
-                    key={c.code}
+                    type="button"
                     onClick={() => {
-                      setCountry(c.code);
+                      setCountry("");
                       setGrade("");
                     }}
-                    className={`relative rounded-xl border p-4 text-left transition-all ${
-                      active
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-card hover:border-foreground/20"
-                    }`}
+                    className="text-[10px] text-muted-foreground hover:text-foreground font-medium underline"
                   >
-                    <span className="text-2xl">{c.flag}</span>
-                    <div className="mt-2 font-semibold text-sm">{c.name}</div>
-                    <div className="text-[10px] text-muted-foreground">{c.curriculum}</div>
-                    {active && (
-                      <CheckCircle2 className="absolute right-3 top-3 h-4 w-4 text-primary" />
-                    )}
+                    Clear
                   </button>
-                );
-              })}
+                </div>
+              </div>
+            )}
+
+            {/* Search Combobox for all countries */}
+            <div className="mt-6 relative">
+              <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Search All Countries
+              </h4>
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3.5 py-2.5 mt-2 focus-within:border-primary transition-colors">
+                <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Type to search all countries..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setIsOpen(true);
+                  }}
+                  onFocus={() => setIsOpen(true)}
+                  onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+                  className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="text-xs text-muted-foreground hover:text-foreground shrink-0"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {isOpen && (
+                <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-border bg-card p-1.5 shadow-lg backdrop-blur-xl animate-in slide-in-from-top-2 duration-150">
+                  {getCountriesList().filter((c) =>
+                    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    c.curriculum.toLowerCase().includes(searchQuery.toLowerCase())
+                  ).length === 0 ? (
+                    <div className="p-3 text-center text-xs text-muted-foreground">
+                      No matching countries found
+                    </div>
+                  ) : (
+                    getCountriesList()
+                      .filter((c) =>
+                        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        c.curriculum.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                      .map((c) => (
+                        <button
+                          key={c.code}
+                          type="button"
+                          onClick={() => {
+                            setCountry(c.code);
+                            setGrade("");
+                            setSearchQuery("");
+                            setIsOpen(false);
+                          }}
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/70 transition-colors"
+                        >
+                          <span className="text-lg shrink-0">{c.flag}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium truncate text-xs">{c.name}</div>
+                            <div className="text-[9px] text-muted-foreground truncate">{c.curriculum}</div>
+                          </div>
+                          {c.code === country && (
+                            <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                          )}
+                        </button>
+                      ))
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -561,31 +683,18 @@ function TeacherDashboard({ userId }: { userId: string }) {
                 required
                 value={newGrade}
                 onChange={(e) => setNewGrade(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm mt-1 outline-none focus:border-primary"
+                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm mt-1 outline-none focus:border-primary focus:ring-1 focus:ring-primary max-h-60"
               >
                 <option value="">Select a grade...</option>
-                <optgroup label="Ghana GES">
-                  <option value="jhs1">JHS 1</option>
-                  <option value="jhs2">JHS 2</option>
-                  <option value="jhs3">JHS 3 (BECE)</option>
-                  <option value="shs1">SHS 1</option>
-                </optgroup>
-                <optgroup label="Nigeria NERDC">
-                  <option value="jss2">JSS 2</option>
-                  <option value="jss3">JSS 3</option>
-                  <option value="ss1">SS 1</option>
-                </optgroup>
-                <optgroup label="US Common Core">
-                  <option value="g6">Grade 6</option>
-                  <option value="g7">Grade 7</option>
-                  <option value="g8">Grade 8</option>
-                  <option value="g9">Grade 9 (Algebra I)</option>
-                </optgroup>
-                <optgroup label="UK GCSE">
-                  <option value="y8">Year 8</option>
-                  <option value="y9">Year 9</option>
-                  <option value="y10">Year 10</option>
-                </optgroup>
+                {getCountriesList().map((c) => (
+                  <optgroup key={c.code} label={`${c.flag} ${c.name} (${c.curriculum})`}>
+                    {c.grades.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
               </select>
             </div>
             <button
