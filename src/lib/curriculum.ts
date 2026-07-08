@@ -350,7 +350,116 @@ const geometryTopic: Topic = {
   ],
 };
 
-const sharedTopics = [fractionsTopic, algebraTopic, geometryTopic];
+const ratiosTopic: Topic = {
+  id: "ratios-proportions",
+  title: "Ratios and Proportions",
+  objective: "Understand ratios, find equivalent ratios, and solve proportion problems.",
+  videoUrl: "https://www.youtube.com/embed/HPDWOZc_lI0",
+  workedExamples: [
+    {
+      title: "Example 1 — Simplify a Ratio",
+      steps: [
+        "Start with the ratio 12:18.",
+        "Find the greatest common divisor (GCD) of 12 and 18, which is 6.",
+        "Divide both numbers by 6: 12/6 = 2, and 18/6 = 3.",
+        "The simplified ratio is 2:3.",
+      ],
+    },
+    {
+      title: "Example 2 — Solving a Proportion",
+      steps: [
+        "Solve for x: x/5 = 12/20.",
+        "Cross-multiply: x * 20 = 5 * 12, so 20x = 60.",
+        "Divide both sides by 20: x = 60/20.",
+        "Answer: x = 3.",
+      ],
+    },
+  ],
+  questions: [
+    {
+      id: "r1",
+      prompt: "Simplify the ratio 8:12.",
+      choices: ["2:3", "3:4", "4:6", "1:2"],
+      answerIndex: 0,
+      difficulty: "Foundational",
+      explanation: "Divide both 8 and 12 by their greatest common divisor, 4, to get 2:3.",
+    },
+    {
+      id: "r2",
+      prompt: "If 3 apples cost $1.50, how much do 6 apples cost?",
+      choices: ["$3.00", "$2.50", "$4.00", "$4.50"],
+      answerIndex: 0,
+      difficulty: "Foundational",
+      explanation: "6 apples is twice as many as 3, so they cost twice as much: $1.50 * 2 = $3.00.",
+    },
+    {
+      id: "r3",
+      prompt: "Solve for x: x/4 = 9/12",
+      choices: ["3", "4", "6", "9"],
+      answerIndex: 0,
+      difficulty: "Standard",
+      explanation: "Cross-multiply: 12x = 36 -> x = 3.",
+    },
+    {
+      id: "r4",
+      prompt: "A map scale is 1 cm : 5 km. If the distance on the map is 4 cm, what is the actual distance?",
+      choices: ["20 km", "10 km", "15 km", "25 km"],
+      answerIndex: 0,
+      difficulty: "Standard",
+      explanation: "Multiply the map distance by the scale: 4 * 5 = 20 km.",
+    },
+    {
+      id: "r5",
+      prompt: "Are the ratios 2:3 and 6:9 equivalent?",
+      choices: ["Yes", "No", "Only under conditions", "Cannot determine"],
+      answerIndex: 0,
+      difficulty: "Foundational",
+      explanation: "Simplify 6:9 by dividing both by 3, which gives 2:3. They are equivalent.",
+    },
+    {
+      id: "r6",
+      prompt: "Find the missing term in the proportion 5:8 = 15:x.",
+      choices: ["24", "16", "20", "30"],
+      answerIndex: 0,
+      difficulty: "Standard",
+      explanation: "Since 5 * 3 = 15, we must multiply 8 by 3 to find x: 8 * 3 = 24.",
+    },
+    {
+      id: "r7",
+      prompt: "If a car travels 120 miles in 2 hours, what is its rate in miles per hour?",
+      choices: ["60 mph", "50 mph", "70 mph", "55 mph"],
+      answerIndex: 0,
+      difficulty: "Foundational",
+      explanation: "Rate = Distance / Time = 120 / 2 = 60 mph.",
+    },
+    {
+      id: "r8",
+      prompt: "Divide 20 in the ratio 2:3.",
+      choices: ["8 and 12", "10 and 10", "6 and 14", "5 and 15"],
+      answerIndex: 0,
+      difficulty: "Challenge",
+      explanation: "Total parts = 2 + 3 = 5. One part = 20 / 5 = 4. Parts are 2*4=8 and 3*4=12.",
+    },
+    {
+      id: "r9",
+      prompt: "Out of 30 students, 12 are boys. What is the ratio of girls to boys?",
+      choices: ["3:2", "2:3", "5:3", "3:5"],
+      answerIndex: 0,
+      difficulty: "Challenge",
+      explanation: "Number of girls = 30 - 12 = 18. Ratio of girls to boys is 18:12, which simplifies to 3:2.",
+    },
+    {
+      id: "r10",
+      prompt: "Solve the proportion: 3/x = 15/25",
+      choices: ["5", "3", "6", "10"],
+      answerIndex: 0,
+      difficulty: "Standard",
+      explanation: "Cross-multiply: 15x = 75 -> x = 5.",
+    },
+  ],
+};
+
+const sharedTopics = [fractionsTopic, ratiosTopic, geometryTopic, algebraTopic];
 
 export function getFallbackTopicsForGrade(totalGrades: number, index: number): Topic[] {
   if (totalGrades === 3) {
@@ -359,8 +468,8 @@ export function getFallbackTopicsForGrade(totalGrades: number, index: number): T
     return [algebraTopic];
   } else if (totalGrades === 4) {
     if (index === 0) return [fractionsTopic];
-    if (index === 1) return [fractionsTopic, geometryTopic];
-    if (index === 2) return [geometryTopic, algebraTopic];
+    if (index === 1) return [ratiosTopic];
+    if (index === 2) return [geometryTopic];
     return [algebraTopic];
   }
   return sharedTopics;
