@@ -1,4 +1,4 @@
--- Database migration: Add ratios-proportions topic, insert its questions, and allocate distinct topics to grades
+-- Database migration: Add ratios-proportions topic, insert its questions, and allocate distinct combinations of exactly 3 topics to grades
 -- Target Tables: public.topics, public.questions, public.grade_topics
 
 -- 1. Insert the Ratios and Proportions topic
@@ -43,7 +43,7 @@ ON CONFLICT (id) DO UPDATE SET
 -- 3. Delete existing mappings in public.grade_topics
 DELETE FROM public.grade_topics;
 
--- 4. Re-allocate strictly distinct topic per grade based on total grade count (3 vs 4)
+-- 4. Re-allocate unique combinations of exactly 3 topics per grade based on total grade count (3 vs 4)
 WITH ordered_grades AS (
   SELECT 
     id AS grade_id,
@@ -72,28 +72,72 @@ WITH ordered_grades AS (
   FROM public.grades
 ),
 allocations AS (
-  -- 3-grade systems
+  -- 3-grade systems:
+  -- Grade index 1 (Fractions, Ratios, Geometry)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
   UNION ALL
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
+  UNION ALL
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
+  
+  UNION ALL
+  -- Grade index 2 (Fractions, Geometry, Algebra)
+  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
+  UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
+  UNION ALL
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
+  
+  UNION ALL
+  -- Grade index 3 (Ratios, Geometry, Algebra)
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
+  UNION ALL
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
   UNION ALL
   SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
   
   UNION ALL
   
-  -- 4-grade systems
+  -- 4-grade systems:
+  -- Grade index 1 (Fractions, Ratios, Geometry)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
+  UNION ALL
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
+  UNION ALL
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
+  
+  UNION ALL
+  -- Grade index 2 (Fractions, Ratios, Algebra)
+  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
   UNION ALL
   SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
   UNION ALL
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
+  
+  UNION ALL
+  -- Grade index 3 (Fractions, Geometry, Algebra)
+  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
+  UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
+  UNION ALL
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
+  
+  UNION ALL
+  -- Grade index 4 (Ratios, Geometry, Algebra)
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
+  UNION ALL
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
   UNION ALL
   SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
   
   UNION ALL
   
-  -- Fallback for any other grade count
+  -- Fallback for any other grade count (Fractions, Geometry, Algebra)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades NOT IN (3, 4)
+  UNION ALL
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades NOT IN (3, 4)
+  UNION ALL
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades NOT IN (3, 4)
 )
 INSERT INTO public.grade_topics (grade_id, topic_id)
 SELECT grade_id, topic_id 
