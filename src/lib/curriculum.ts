@@ -463,14 +463,14 @@ const sharedTopics = [fractionsTopic, ratiosTopic, geometryTopic, algebraTopic];
 
 export function getFallbackTopicsForGrade(totalGrades: number, index: number): Topic[] {
   if (totalGrades === 3) {
-    if (index === 0) return [fractionsTopic, ratiosTopic, geometryTopic];
-    if (index === 1) return [fractionsTopic, geometryTopic, algebraTopic];
-    return [ratiosTopic, geometryTopic, algebraTopic];
+    if (index === 0) return [fractionsTopic, ratiosTopic, algebraTopic];
+    if (index === 1) return [ratiosTopic, geometryTopic, algebraTopic];
+    return [fractionsTopic, geometryTopic, algebraTopic];
   } else if (totalGrades === 4) {
-    if (index === 0) return [fractionsTopic, ratiosTopic, geometryTopic];
-    if (index === 1) return [fractionsTopic, ratiosTopic, algebraTopic];
-    if (index === 2) return [fractionsTopic, geometryTopic, algebraTopic];
-    return [ratiosTopic, geometryTopic, algebraTopic];
+    if (index === 0) return [ratiosTopic, geometryTopic, algebraTopic];
+    if (index === 1) return [fractionsTopic, geometryTopic, algebraTopic];
+    if (index === 2) return [fractionsTopic, ratiosTopic, algebraTopic];
+    return [fractionsTopic, ratiosTopic, geometryTopic];
   }
   return [fractionsTopic, geometryTopic, algebraTopic];
 }

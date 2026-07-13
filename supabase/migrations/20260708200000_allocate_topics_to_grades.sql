@@ -73,24 +73,24 @@ WITH ordered_grades AS (
 ),
 allocations AS (
   -- 3-grade systems:
-  -- Grade index 1 (Fractions, Ratios, Geometry)
+  -- Grade index 1 (Fractions, Ratios, Algebra)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
   UNION ALL
   SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
   UNION ALL
-  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 1
   
   UNION ALL
-  -- Grade index 2 (Fractions, Geometry, Algebra)
-  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
+  -- Grade index 2 (Ratios, Geometry, Algebra)
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
   UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
   UNION ALL
   SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 2
   
   UNION ALL
-  -- Grade index 3 (Ratios, Geometry, Algebra)
-  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
+  -- Grade index 3 (Fractions, Geometry, Algebra)
+  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
   UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 3 AND grade_index = 3
   UNION ALL
@@ -99,36 +99,36 @@ allocations AS (
   UNION ALL
   
   -- 4-grade systems:
-  -- Grade index 1 (Fractions, Ratios, Geometry)
-  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
-  UNION ALL
+  -- Grade index 1 (Ratios, Geometry, Algebra)
   SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
   UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
+  UNION ALL
+  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 1
   
   UNION ALL
-  -- Grade index 2 (Fractions, Ratios, Algebra)
+  -- Grade index 2 (Fractions, Geometry, Algebra)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
   UNION ALL
-  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
+  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
   UNION ALL
   SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 2
   
   UNION ALL
-  -- Grade index 3 (Fractions, Geometry, Algebra)
+  -- Grade index 3 (Fractions, Ratios, Algebra)
   SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
   UNION ALL
-  SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
+  SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
   UNION ALL
   SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 3
   
   UNION ALL
-  -- Grade index 4 (Ratios, Geometry, Algebra)
+  -- Grade index 4 (Fractions, Ratios, Geometry)
+  SELECT grade_id, 'fractions-basics' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
+  UNION ALL
   SELECT grade_id, 'ratios-proportions' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
   UNION ALL
   SELECT grade_id, 'area-perimeter' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
-  UNION ALL
-  SELECT grade_id, 'linear-equations' AS topic_id FROM ordered_grades WHERE total_grades = 4 AND grade_index = 4
   
   UNION ALL
   
