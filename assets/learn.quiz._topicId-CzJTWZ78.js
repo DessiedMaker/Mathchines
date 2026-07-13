@@ -1,0 +1,1 @@
+import{j as e}from"./index-hADtfGhS.js";const n=({error:t,reset:r})=>e.jsxs("div",{className:"text-center",children:[e.jsx("p",{className:"text-sm text-muted-foreground",children:t.message}),e.jsx("button",{onClick:r,className:"mt-4 text-primary underline",children:"Try again"})]});export{n as errorComponent};
