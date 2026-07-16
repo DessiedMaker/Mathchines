@@ -1597,6 +1597,70 @@ export function SlideDeckPlayer({
         );
       }
 
+      if (titleLower.includes("roadmap") || titleLower.includes("milestones")) {
+        const years = [
+          {
+            title: "Year 1 (Ghana Launch)",
+            desc: "Product-market fit validation in West Africa. Establish user engagement benchmarks and initial syllabus compilation maps.",
+            metric: "Target: 50k MAUs",
+            icon: Globe2,
+            color: "text-emerald-400 border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/30",
+          },
+          {
+            title: "Year 2 (Carrier & Scale)",
+            desc: "Roll out live carrier airtime billing integration. Expand syllabus engine to Nigeria and Kenya for high-volume subscriber capture.",
+            metric: "Target: 250k MAUs / $500k ARR",
+            icon: Coins,
+            color: "text-teal-400 border-teal-500/20 bg-teal-950/10 hover:border-teal-500/30",
+          },
+          {
+            title: "Year 3 (Western & Exit)",
+            desc: "Expand to US remedial school district licensing and enter the UK GCSE markets. Position for high-value strategic acquisition.",
+            metric: "Target: 1M MAUs / $2M+ ARR",
+            icon: TrendingUp,
+            color: "text-sky-400 border-sky-500/20 bg-sky-950/10 hover:border-sky-500/30",
+          },
+        ];
+
+        return (
+          <div className="animate-fade-in flex flex-col justify-center h-full w-full">
+            <h3 className="text-xl font-bold font-display text-center mb-6 text-slate-100">
+              {slide.title}
+            </h3>
+            <div className="grid grid-cols-3 gap-4">
+              {years.map((y, idx) => {
+                const SelectedIcon = y.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${y.color}`}
+                  >
+                    <div className="absolute -left-10 -top-10 -z-10 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl" />
+                    
+                    <div className="flex justify-between items-start gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider font-display">
+                        {y.title}
+                      </span>
+                      <span className="rounded bg-slate-900/60 p-1 border border-slate-800/40 shrink-0">
+                        <SelectedIcon className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed text-left flex-1">
+                      {y.desc}
+                    </p>
+                    <div className="border-t border-slate-850/80 pt-3 mt-1">
+                      <span className="text-[9px] font-bold text-white font-mono bg-slate-950 px-2 py-1 rounded border border-slate-850">
+                        {y.metric}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
       if (titleLower.includes("partner") || titleLower.includes("contact")) {
         return (
           <div className="text-center animate-fade-in space-y-6">

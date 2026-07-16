@@ -113,6 +113,19 @@ graph LR
 - **Phase 5: Launch (Week 7)** · Public roll-out in West Africa and North America.
 - **Phase 6: Post-MVP (Weeks 8–15)** · 1v1 Arena, parent SMS portals, and Lightning Jams.
 
+```mermaid
+gantt
+    title Mathchines Product Growth Timeline (Weeks 1-7)
+    dateFormat  YYYY-MM-DD
+    axisFormat  W%V
+    
+    section Milestone Phases
+    Discovery (W1-2)          :done, 2026-07-01, 2w
+    Design (W3-4)             :done, 2026-07-15, 2w
+    MVP Build (W5-6)          :active, 2026-07-29, 2w
+    Beta & Launch (W7)        : 2026-08-12, 1w
+```
+
 > **Presenter Notes:**
 > Our roadmap is built on systematic verification. We start with curriculum mapping, build core engines during weeks 5-6 (which we are currently working on), conduct beta validation on low-end hardware, and launch publicly in Week 7, immediately unlocking the mobile airtime billing layer.
 
@@ -330,13 +343,14 @@ Model projections based on active monthly user scale, conversions, and blended m
 
 ### 3-Year Operational Roadmap
 
-```
-Year 1 (Ghana Launch)
-  └─ Product-market fit validation in West Africa. Target: 50k MAUs.
-Year 2 (Carrier Integrations & Nigeria Scale)
-  └─ Live carrier billing integration. Expand to Nigeria/Kenya. Target: 250k MAUs / $500k ARR.
-Year 3 (Western Remedial Expansion & High-Value Exit)
-  └─ Expand US remedial school licenses and UK GCSE markets. Target: 1M MAUs / $2M+ ARR.
+- **Year 1 (Ghana Launch)**: PMF validation in West Africa. Target: 50k MAUs.
+- **Year 2 (Carrier & Nigeria Scale)**: Live carrier billing integration. Expand to Nigeria/Kenya. Target: 250k MAUs / $500k ARR.
+- **Year 3 (Western Expansion & Exit)**: Expand US remedial school licenses and UK GCSE markets. Target: 1M MAUs / $2M+ ARR.
+
+```mermaid
+graph LR
+    Y1["Year 1: Ghana Launch<br/>• PMF Validation<br/>• Target: 50k MAUs"] --> Y2["Year 2: Carrier Billing & Scale<br/>• Live carrier integrations<br/>• Expand to Nigeria/Kenya<br/>• Target: 250k MAUs / $500k ARR"]
+    Y2 --> Y3["Year 3: Western Expansion & Exit<br/>• US Remedial licensing<br/>• UK GCSE market entry<br/>• Target: 1M MAUs / $2M+ ARR"]
 ```
 
 > **Presenter Notes:**

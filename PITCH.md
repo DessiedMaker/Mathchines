@@ -67,6 +67,18 @@ Designed to showcase the core user experience, primary personas, and student suc
   - **Design (W3-4)**: Wireframes, UI mockups, and adaptive engine specifications.
   - **MVP Build (W5-6) [In Progress]**: Core engine build and offline database capabilities.
   - **Launch (W7)**: Launch in Ghana and the US with integrated micro-airtime billing.
+  ```mermaid
+  gantt
+      title Mathchines Product Growth Timeline (Weeks 1-7)
+      dateFormat  YYYY-MM-DD
+      axisFormat  W%V
+      
+      section Milestone Phases
+      Discovery (W1-2)          :done, 2026-07-01, 2w
+      Design (W3-4)             :done, 2026-07-15, 2w
+      MVP Build (W5-6)          :active, 2026-07-29, 2w
+      Beta & Launch (W7)        : 2026-08-12, 1w
+  ```
 - **Presenter Notes**:
   > Our proposed roadmap is divided into structured phases. We start with Phase 1-2: curriculum mapping and UX design. We build the core MVP in Weeks 5-6 (currently in progress), followed by thorough beta testing in Ghana and the US. Launch is slated for Week 7, with post-MVP features like 1v1 Math-Off duels, Lightning Jams, and parent SMS reports releasing in subsequent months. By Phase 7, we expand to Nigeria, Kenya, and the UK.
 
@@ -189,5 +201,14 @@ Designed for venture capital presentations, highlighting scale economics, direct
 ### Slide 10: Roadmap & Exit
 
 - **Subtitle**: The 3-Year Scaling Lifecycle
+- **Key Visuals**: 3-Year Scaling Flowchart:
+  - **Year 1 (Ghana Launch)**: PMF validation in West Africa. Target: 50k MAUs.
+  - **Year 2 (Carrier & Nigeria Scale)**: Live carrier billing integration. Expand to Nigeria/Kenya. Target: 250k MAUs / $500k ARR.
+  - **Year 3 (Western Expansion & Exit)**: Expand US remedial school licenses and UK GCSE markets. Target: 1M MAUs / $2M+ ARR.
+  ```mermaid
+  graph LR
+      Y1["Year 1: Ghana Launch<br/>• PMF Validation<br/>• Target: 50k MAUs"] --> Y2["Year 2: Carrier Billing & Scale<br/>• Live carrier integrations<br/>• Expand to Nigeria/Kenya<br/>• Target: 250k MAUs / $500k ARR"]
+      Y2 --> Y3["Year 3: Western Expansion & Exit<br/>• US Remedial licensing<br/>• UK GCSE market entry<br/>• Target: 1M MAUs / $2M+ ARR"]
+  ```
 - **Presenter Notes**:
   > Our roadmap leads to a high-value exit or Series A. In Year 1, we secure product-market fit in Ghana, targeting 50k MAUs. In Year 2, we launch direct carrier billing integrations and expand to Nigeria and Kenya, aiming for 250k MAUs and $500K ARR. By Year 3, we target 1 million active users and $2M+ ARR across Sub-Saharan Africa and Western remedial cohorts. Mathchines is positioning to be the dominant math learning gateway for the emerging middle class globally. Thank you, and we welcome your questions.
