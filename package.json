@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "postbuild": "node scripts/postbuild.js",
-    "deploy": "gh-pages -d dist/client"
+    "deploy": "bun run build && bun run postbuild && gh-pages -d dist/client"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
