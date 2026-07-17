@@ -129,7 +129,7 @@ export function SlideDeckPlayer({
           email: authEmail,
           password: authPassword,
           options: {
-            emailRedirectTo: `${window.location.origin}/learn`,
+            emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}learn`,
             data: { display_name: authDisplayName },
           },
         });
@@ -177,7 +177,7 @@ export function SlideDeckPlayer({
   const handleSlideGoogleAuth = async () => {
     setAuthLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/learn",
+      redirect_uri: `${window.location.origin}${import.meta.env.BASE_URL}learn`,
     });
     if (result.error) {
       toast.error("Google sign-in failed. Please try again.");
