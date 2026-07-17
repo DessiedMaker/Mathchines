@@ -1,5 +1,14 @@
 const CACHE_NAME = "mathchines-cache-v1";
-const PRECACHE_ASSETS = ["/", "/learn", "/auth"];
+
+// Dynamically resolve base path from registration scope to support GitHub Pages subpath
+const scopePath = new URL(self.registration.scope).pathname;
+const basePath = scopePath.endsWith("/") ? scopePath : scopePath + "/";
+
+const PRECACHE_ASSETS = [
+  basePath,
+  `${basePath}learn`,
+  `${basePath}auth`
+];
 
 // Install Event - Precache primary entry points
 self.addEventListener("install", (event) => {
@@ -55,11 +64,12 @@ self.addEventListener("fetch", (event) => {
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(() => {
-        // If offline, serve the /learn shell for learn subroutes, or root shell
-        if (url.pathname.startsWith("/learn")) {
-          return caches.match("/learn");
+        // If offline, serve the learn shell for learn subroutes, or root shell
+        const learnPath = `${basePath}learn`;
+        if (url.pathname.startsWith(learnPath)) {
+          return caches.match(learnPath);
         }
-        return caches.match("/") || caches.match("/learn");
+        return caches.match(basePath) || caches.match(learnPath);
       }),
     );
     return;
