@@ -15,7 +15,7 @@ function run() {
   try {
     fs.copyFileSync(shellPath, indexPath);
     console.log(`Successfully copied ${shellPath} to ${indexPath}`);
-    
+
     fs.copyFileSync(shellPath, fallbackPath);
     console.log(`Successfully copied ${shellPath} to ${fallbackPath}`);
   } catch (err) {

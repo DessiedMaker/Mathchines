@@ -6,7 +6,10 @@ export interface RawCountry {
   grades: { id: string; label: string }[];
 }
 
-const customCountries: Record<string, { curriculum: string; grades: { id: string; label: string }[] }> = {
+const customCountries: Record<
+  string,
+  { curriculum: string; grades: { id: string; label: string }[] }
+> = {
   GH: {
     curriculum: "GES / WAEC",
     grades: [
@@ -183,22 +186,59 @@ const customCountries: Record<string, { curriculum: string; grades: { id: string
 };
 
 const spanishSpeaking = new Set([
-  "AR", "BO", "CL", "CO", "CR", "CU", "DO", "EC", "SV", "GQ", "GT", "HN", "NI", "PA", "PY", "PE", "UY", "VE"
+  "AR",
+  "BO",
+  "CL",
+  "CO",
+  "CR",
+  "CU",
+  "DO",
+  "EC",
+  "SV",
+  "GQ",
+  "GT",
+  "HN",
+  "NI",
+  "PA",
+  "PY",
+  "PE",
+  "UY",
+  "VE",
 ]);
 
 const frenchSpeaking = new Set([
-  "BE", "BJ", "BF", "BI", "CF", "TD", "KM", "CG", "CD", "CI", "DJ", "GA", "GN", "HT", "MG", "ML", "MC", "NE", "RW", "SN", "TG", "TN", "VU"
+  "BE",
+  "BJ",
+  "BF",
+  "BI",
+  "CF",
+  "TD",
+  "KM",
+  "CG",
+  "CD",
+  "CI",
+  "DJ",
+  "GA",
+  "GN",
+  "HT",
+  "MG",
+  "ML",
+  "MC",
+  "NE",
+  "RW",
+  "SN",
+  "TG",
+  "TN",
+  "VU",
 ]);
 
-const caribbean = new Set([
-  "AG", "BS", "BB", "BZ", "DM", "GD", "GY", "KN", "LC", "VC", "TT"
-]);
+const caribbean = new Set(["AG", "BS", "BB", "BZ", "DM", "GD", "GY", "KN", "LC", "VC", "TT"]);
 
 function getFlagEmoji(countryCode: string): string {
   const codePoints = countryCode
     .toUpperCase()
     .split("")
-    .map(char => 127397 + char.charCodeAt(0));
+    .map((char) => 127397 + char.charCodeAt(0));
   return String.fromCodePoint(...codePoints);
 }
 
@@ -453,7 +493,7 @@ const rawCountriesList = [
   { code: "ZW", name: "Zimbabwe" },
 ];
 
-export const RAW_COUNTRIES: RawCountry[] = rawCountriesList.map(c => {
+export const RAW_COUNTRIES: RawCountry[] = rawCountriesList.map((c) => {
   const code = c.code;
   if (customCountries[code]) {
     return {

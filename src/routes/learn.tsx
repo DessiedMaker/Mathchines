@@ -127,7 +127,10 @@ function getInitialUser(): User | null {
         return {
           id: parsed.id || "demo-user-id",
           email: parsed.email || "demo@mathchines.com",
-          user_metadata: { display_name: parsed.user_metadata?.display_name || parsed.display_name || "Demo Learner" },
+          user_metadata: {
+            display_name:
+              parsed.user_metadata?.display_name || parsed.display_name || "Demo Learner",
+          },
         } as any;
       }
     } catch {}
@@ -200,11 +203,13 @@ function LearnLayout() {
         const authTimeout = new Promise<{ data: { session: any } }>((resolve) => {
           setTimeout(() => resolve({ data: { session: null } }), 2000);
         });
-        
+
         const { data } = await Promise.race([sessionPromise, authTimeout]);
-        
+
         if (!data.session) {
-          const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+          const isMock =
+            typeof window !== "undefined" &&
+            localStorage.getItem("mathchines.mock_auth") === "true";
           if (isMock) {
             setUser(getInitialUser());
             setRoleState(getProgress().role || null);
@@ -213,12 +218,12 @@ function LearnLayout() {
           }
         } else {
           setUser(data.session.user);
-          
+
           const loadPromise = Promise.all([
             hydrateFromCloud(data.session.user.id),
             loadCurriculumFromDatabase(),
           ]);
-          
+
           const loadTimeout = new Promise((resolve) => {
             setTimeout(() => {
               console.warn("Supabase loading timed out. Falling back to local data.");
@@ -231,7 +236,8 @@ function LearnLayout() {
         }
       } catch (err) {
         console.error("Auth init failed, falling back to local progress:", err);
-        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        const isMock =
+          typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
         if (isMock) {
           setUser(getInitialUser());
           setRoleState(getProgress().role || null);

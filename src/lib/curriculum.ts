@@ -402,7 +402,8 @@ const ratiosTopic: Topic = {
     },
     {
       id: "r4",
-      prompt: "A map scale is 1 cm : 5 km. If the distance on the map is 4 cm, what is the actual distance?",
+      prompt:
+        "A map scale is 1 cm : 5 km. If the distance on the map is 4 cm, what is the actual distance?",
       choices: ["20 km", "10 km", "15 km", "25 km"],
       answerIndex: 0,
       difficulty: "Standard",
@@ -446,7 +447,8 @@ const ratiosTopic: Topic = {
       choices: ["3:2", "2:3", "5:3", "3:5"],
       answerIndex: 0,
       difficulty: "Challenge",
-      explanation: "Number of girls = 30 - 12 = 18. Ratio of girls to boys is 18:12, which simplifies to 3:2.",
+      explanation:
+        "Number of girls = 30 - 12 = 18. Ratio of girls to boys is 18:12, which simplifies to 3:2.",
     },
     {
       id: "r10",

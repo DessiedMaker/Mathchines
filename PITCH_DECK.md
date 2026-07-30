@@ -98,8 +98,6 @@ graph LR
 > **Presenter Notes:**
 > The student loop is streamlined for high engagement. Upon onboarding, the curriculum compiler maps their path. An optional diagnostic placement quiz pinpoints gaps. Interactive practice adjusts question difficulty in real time, and any mistake immediately triggers explanatory step-by-step correction.
 
-
-
 ---
 
 # Roadmap & Go-To-Market
@@ -118,7 +116,7 @@ gantt
     title Mathchines Product Growth Timeline (Weeks 1-7)
     dateFormat  YYYY-MM-DD
     axisFormat  W%V
-    
+
     section Milestone Phases
     Discovery (W1-2)          :done, 2026-07-01, 2w
     Design (W3-4)             :done, 2026-07-15, 2w

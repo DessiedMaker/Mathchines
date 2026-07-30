@@ -87,7 +87,8 @@ function AuthPage() {
       if (data.session) {
         navigate({ to: "/learn" });
       } else {
-        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        const isMock =
+          typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
         if (isMock) navigate({ to: "/learn" });
       }
     });
@@ -108,7 +109,7 @@ function AuthPage() {
           toast.error(parsed.error.issues[0].message);
           return;
         }
-        let { error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
           email: parsed.data.email,
           password: parsed.data.password,
           options: {
@@ -148,7 +149,7 @@ function AuthPage() {
           toast.error(parsed.error.issues[0].message);
           return;
         }
-        let { error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
           password: parsed.data.password,
         });
@@ -168,7 +169,10 @@ function AuthPage() {
             navigate({ to: "/learn" });
             return;
           }
-          if (parsed.data.email === "demo@mathchines.com" && parsed.data.password === "password123") {
+          if (
+            parsed.data.email === "demo@mathchines.com" &&
+            parsed.data.password === "password123"
+          ) {
             const { error: signUpError } = await supabase.auth.signUp({
               email: parsed.data.email,
               password: parsed.data.password,
@@ -220,7 +224,10 @@ function AuthPage() {
       });
 
       if (error) {
-        if (error.message.toLowerCase().includes("invalid") || error.message.toLowerCase().includes("not found")) {
+        if (
+          error.message.toLowerCase().includes("invalid") ||
+          error.message.toLowerCase().includes("not found")
+        ) {
           const { error: signUpError } = await supabase.auth.signUp({
             email: demoEmail,
             password: demoPassword,
@@ -255,7 +262,7 @@ function AuthPage() {
         navigate({ to: "/learn" });
         return;
       }
-      
+
       toast.success("Signed in with demo account!");
       navigate({ to: "/learn" });
     } catch (err) {
@@ -360,17 +367,31 @@ function AuthPage() {
                           displayName.trim().length >= 2 ? "bg-green-500" : "bg-muted-foreground/40"
                         }`}
                       />
-                      <span className={displayName.trim().length >= 2 ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                      <span
+                        className={
+                          displayName.trim().length >= 2
+                            ? "text-green-500 font-medium"
+                            : "text-muted-foreground"
+                        }
+                      >
                         At least 2 characters
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div
                         className={`h-1.5 w-1.5 rounded-full ${
-                          /^[a-zA-Z0-9\s-_]+$/.test(displayName) ? "bg-green-500" : "bg-red-500 animate-pulse"
+                          /^[a-zA-Z0-9\s-_]+$/.test(displayName)
+                            ? "bg-green-500"
+                            : "bg-red-500 animate-pulse"
                         }`}
                       />
-                      <span className={/^[a-zA-Z0-9\s-_]+$/.test(displayName) ? "text-green-500 font-medium" : "text-red-500 font-semibold"}>
+                      <span
+                        className={
+                          /^[a-zA-Z0-9\s-_]+$/.test(displayName)
+                            ? "text-green-500 font-medium"
+                            : "text-red-500 font-semibold"
+                        }
+                      >
                         Only letters, numbers, spaces, hyphens, and underscores
                       </span>
                     </div>
@@ -406,7 +427,9 @@ function AuthPage() {
             </div>
             {mode === "signup" && password.length > 0 && (
               <div className="mt-1 mb-3 bg-muted/40 p-3 rounded-lg border border-border/50 text-xs space-y-1.5">
-                <p className="font-semibold text-muted-foreground mb-1 text-[11px]">Password Requirements:</p>
+                <p className="font-semibold text-muted-foreground mb-1 text-[11px]">
+                  Password Requirements:
+                </p>
                 <div className="flex items-center gap-2">
                   <div
                     className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
@@ -415,19 +438,31 @@ function AuthPage() {
                   >
                     ✓
                   </div>
-                  <span className={password.length >= 8 ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      password.length >= 8 ? "text-green-500 font-medium" : "text-muted-foreground"
+                    }
+                  >
                     At least 8 characters ({password.length}/8)
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
                     className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
-                      /[a-z]/.test(password) && /[A-Z]/.test(password) ? "bg-green-500" : "bg-muted-foreground/35"
+                      /[a-z]/.test(password) && /[A-Z]/.test(password)
+                        ? "bg-green-500"
+                        : "bg-muted-foreground/35"
                     }`}
                   >
                     ✓
                   </div>
-                  <span className={/[a-z]/.test(password) && /[A-Z]/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      /[a-z]/.test(password) && /[A-Z]/.test(password)
+                        ? "text-green-500 font-medium"
+                        : "text-muted-foreground"
+                    }
+                  >
                     Both uppercase & lowercase letters
                   </span>
                 </div>
@@ -439,7 +474,11 @@ function AuthPage() {
                   >
                     ✓
                   </div>
-                  <span className={/\d/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      /\d/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"
+                    }
+                  >
                     At least one number
                   </span>
                 </div>
@@ -451,19 +490,33 @@ function AuthPage() {
                   >
                     ✓
                   </div>
-                  <span className={/[^A-Za-z0-9]/.test(password) ? "text-green-500 font-medium" : "text-muted-foreground"}>
+                  <span
+                    className={
+                      /[^A-Za-z0-9]/.test(password)
+                        ? "text-green-500 font-medium"
+                        : "text-muted-foreground"
+                    }
+                  >
                     At least one special character
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div
                     className={`h-3.5 w-3.5 rounded-full flex items-center justify-center text-[8px] font-bold text-white transition-all ${
-                      (!/password/i.test(password) && !/12345/i.test(password)) ? "bg-green-500" : "bg-red-500"
+                      !/password/i.test(password) && !/12345/i.test(password)
+                        ? "bg-green-500"
+                        : "bg-red-500"
                     }`}
                   >
-                    {(!/password/i.test(password) && !/12345/i.test(password)) ? "✓" : "✗"}
+                    {!/password/i.test(password) && !/12345/i.test(password) ? "✓" : "✗"}
                   </div>
-                  <span className={(!/password/i.test(password) && !/12345/i.test(password)) ? "text-green-500 font-medium" : "text-red-500 font-semibold"}>
+                  <span
+                    className={
+                      !/password/i.test(password) && !/12345/i.test(password)
+                        ? "text-green-500 font-medium"
+                        : "text-red-500 font-semibold"
+                    }
+                  >
                     No common words (e.g. "password", "12345")
                   </span>
                 </div>
@@ -514,7 +567,9 @@ function AuthPage() {
             <div className="mt-2.5 flex flex-col gap-1 text-xs font-mono">
               <div className="flex justify-between px-2">
                 <span className="text-muted-foreground">Email:</span>
-                <span className="font-semibold text-foreground select-all">demo@mathchines.com</span>
+                <span className="font-semibold text-foreground select-all">
+                  demo@mathchines.com
+                </span>
               </div>
               <div className="flex justify-between px-2">
                 <span className="text-muted-foreground">Password:</span>

@@ -67,18 +67,20 @@ Designed to showcase the core user experience, primary personas, and student suc
   - **Design (W3-4)**: Wireframes, UI mockups, and adaptive engine specifications.
   - **MVP Build (W5-6) [In Progress]**: Core engine build and offline database capabilities.
   - **Launch (W7)**: Launch in Ghana and the US with integrated micro-airtime billing.
+
   ```mermaid
   gantt
       title Mathchines Product Growth Timeline (Weeks 1-7)
       dateFormat  YYYY-MM-DD
       axisFormat  W%V
-      
+
       section Milestone Phases
       Discovery (W1-2)          :done, 2026-07-01, 2w
       Design (W3-4)             :done, 2026-07-15, 2w
       MVP Build (W5-6)          :active, 2026-07-29, 2w
       Beta & Launch (W7)        : 2026-08-12, 1w
   ```
+
 - **Presenter Notes**:
   > Our proposed roadmap is divided into structured phases. We start with Phase 1-2: curriculum mapping and UX design. We build the core MVP in Weeks 5-6 (currently in progress), followed by thorough beta testing in Ghana and the US. Launch is slated for Week 7, with post-MVP features like 1v1 Math-Off duels, Lightning Jams, and parent SMS reports releasing in subsequent months. By Phase 7, we expand to Nigeria, Kenya, and the UK.
 

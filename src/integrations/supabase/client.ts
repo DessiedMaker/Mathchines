@@ -48,7 +48,8 @@ function getActiveMockUser() {
 
 const mockAuth = {
   getSession: async () => {
-    const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+    const isMock =
+      typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
     if (isMock) {
       const mockUser = getActiveMockUser();
       return {
@@ -65,7 +66,8 @@ const mockAuth = {
   },
   onAuthStateChange: (callback: any) => {
     listeners.add(callback);
-    const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+    const isMock =
+      typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
     if (isMock) {
       const mockUser = getActiveMockUser();
       const mockSession = {
@@ -89,7 +91,7 @@ const mockAuth = {
   signInWithPassword: async (credentials: any) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("mathchines.mock_auth", "true");
-      
+
       let displayName = "Learner";
       try {
         const usersRaw = localStorage.getItem("mathchines.mock_registered_users");
@@ -101,15 +103,15 @@ const mockAuth = {
           displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
         }
       } catch {}
-      
+
       const mockUser = {
         id: "mock-user-" + Math.random().toString(36).substring(2, 9),
         email: credentials.email,
         user_metadata: { display_name: displayName },
       };
-      
+
       localStorage.setItem("mathchines.mock_user", JSON.stringify(mockUser));
-      
+
       const mockSession = {
         access_token: "mock-token",
         user: mockUser,
@@ -128,24 +130,24 @@ const mockAuth = {
   signUp: async (credentials: any) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("mathchines.mock_auth", "true");
-      
+
       const displayName = credentials.options?.data?.display_name || "Learner";
-      
+
       try {
         const usersRaw = localStorage.getItem("mathchines.mock_registered_users");
         const users = usersRaw ? JSON.parse(usersRaw) : {};
         users[credentials.email] = { displayName };
         localStorage.setItem("mathchines.mock_registered_users", JSON.stringify(users));
       } catch {}
-      
+
       const mockUser = {
         id: "mock-user-" + Math.random().toString(36).substring(2, 9),
         email: credentials.email,
         user_metadata: { display_name: displayName },
       };
-      
+
       localStorage.setItem("mathchines.mock_user", JSON.stringify(mockUser));
-      
+
       const mockSession = {
         access_token: "mock-token",
         user: mockUser,
@@ -209,43 +211,170 @@ class MockQueryBuilder {
   private tableName: string;
   private queryData: any;
   private queryError: any = null;
+  private isSingle: boolean = false;
 
   constructor(tableName: string) {
     this.tableName = tableName;
     if (tableName === "profiles") {
-      this.queryData = null;
+      this.queryData = [
+        {
+          id: "demo-student-id",
+          display_name: "Demo Student",
+          email: "student@demo.com",
+          role: "student",
+          xp: 350,
+          streak: 5,
+          mastered_topics: ["fractions-intro"]
+        }
+      ];
     } else if (tableName === "classrooms") {
-      this.queryData = { id: "mock-class-id", name: "Demo Math Class", code: "DEMO101" };
+      this.queryData = [
+        {
+          id: "mock-class-id",
+          name: "Demo Math Class",
+          code: "DEMO101",
+          grades: { label: "JHS 1" }
+        }
+      ];
+    } else if (tableName === "classroom_enrollments") {
+      this.queryData = [
+        {
+          classroom_id: "mock-class-id",
+          classrooms: {
+            id: "mock-class-id",
+            name: "Demo Math Class",
+            code: "DEMO101",
+            profiles: {
+              display_name: "Demo Teacher"
+            }
+          }
+        }
+      ];
+    } else if (tableName === "parent_student_links") {
+      this.queryData = [
+        {
+          student_id: "mock-student-id",
+          profiles: {
+            id: "mock-student-id",
+            display_name: "Demo Student",
+            email: "student@demo.com",
+            xp: 350,
+            streak: 5,
+            mastered_topics: ["fractions-intro"]
+          }
+        }
+      ];
     } else {
       this.queryData = [];
     }
   }
 
-  select(...args: any[]) { return this; }
-  insert(...args: any[]) { return this; }
-  update(...args: any[]) { return this; }
-  delete(...args: any[]) { return this; }
-  eq(...args: any[]) {
-    if (this.tableName === "classrooms" && args[0] === "code" && typeof args[1] === "string") {
-      this.queryData = { id: "mock-class-id", name: "Demo Math Class", code: args[1] };
+  select(...args: any[]) {
+    return this;
+  }
+  insert(data: any) {
+    if (Array.isArray(this.queryData)) {
+      if (Array.isArray(data)) {
+        this.queryData = [...this.queryData, ...data];
+      } else {
+        this.queryData = [...this.queryData, data];
+      }
+    } else {
+      this.queryData = data;
     }
     return this;
   }
-  neq(...args: any[]) { return this; }
-  gt(...args: any[]) { return this; }
-  lt(...args: any[]) { return this; }
-  gte(...args: any[]) { return this; }
-  lte(...args: any[]) { return this; }
-  like(...args: any[]) { return this; }
-  ilike(...args: any[]) { return this; }
-  in(...args: any[]) { return this; }
-  order(...args: any[]) { return this; }
-  limit(...args: any[]) { return this; }
-  single() { return this; }
-  maybeSingle() { return this; }
+  update(data: any) {
+    if (Array.isArray(this.queryData)) {
+      this.queryData = this.queryData.map((item) => ({ ...item, ...data }));
+    } else if (this.queryData) {
+      this.queryData = { ...this.queryData, ...data };
+    }
+    return this;
+  }
+  delete(...args: any[]) {
+    if (Array.isArray(this.queryData)) {
+      this.queryData = [];
+    } else {
+      this.queryData = null;
+    }
+    return this;
+  }
+  eq(...args: any[]) {
+    const [column, value] = args;
+    if (this.tableName === "classrooms" && column === "code" && typeof value === "string") {
+      this.queryData = [
+        {
+          id: "mock-class-id",
+          name: "Demo Math Class",
+          code: value.toUpperCase(),
+          grades: { label: "JHS 1" }
+        }
+      ];
+    }
+    if (this.tableName === "profiles" && column === "display_name" && typeof value === "string") {
+      this.queryData = [
+        {
+          id: "demo-student-id",
+          display_name: value,
+          email: `${value.toLowerCase().replace(/\s+/g, "")}@demo.com`,
+          role: "student",
+          xp: 350,
+          streak: 5,
+          mastered_topics: ["fractions-intro"]
+        }
+      ];
+    }
+    return this;
+  }
+  neq(...args: any[]) {
+    return this;
+  }
+  gt(...args: any[]) {
+    return this;
+  }
+  lt(...args: any[]) {
+    return this;
+  }
+  gte(...args: any[]) {
+    return this;
+  }
+  lte(...args: any[]) {
+    return this;
+  }
+  like(...args: any[]) {
+    return this;
+  }
+  ilike(...args: any[]) {
+    return this;
+  }
+  in(...args: any[]) {
+    return this;
+  }
+  order(...args: any[]) {
+    return this;
+  }
+  limit(...args: any[]) {
+    return this;
+  }
+  single() {
+    this.isSingle = true;
+    return this;
+  }
+  maybeSingle() {
+    this.isSingle = true;
+    return this;
+  }
 
   then(onfulfilled?: (value: { data: any; error: any }) => any, onrejected?: (reason: any) => any) {
-    return Promise.resolve({ data: this.queryData, error: this.queryError }).then(onfulfilled, onrejected);
+    let resolvedData = this.queryData;
+    if (this.isSingle && Array.isArray(this.queryData)) {
+      resolvedData = this.queryData.length > 0 ? this.queryData[0] : null;
+    }
+    return Promise.resolve({ data: resolvedData, error: this.queryError }).then(
+      onfulfilled,
+      onrejected,
+    );
   }
 }
 
@@ -271,13 +400,13 @@ export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>,
 
     try {
       if (!_supabase) _supabase = createSupabaseClient();
-      
+
       // If client is mocked dummy object due to missing env variables
       if (Object.keys(_supabase).length === 0) {
         if (prop === "auth") return mockAuth;
         if (prop === "from") return mockSupabase.from;
       }
-      
+
       return Reflect.get(_supabase, prop, receiver);
     } catch (err) {
       if (prop === "auth") return mockAuth;

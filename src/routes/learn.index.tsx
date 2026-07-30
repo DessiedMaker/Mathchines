@@ -55,7 +55,8 @@ function LearnIndex() {
         if (p.role) setRoleState(p.role);
       } else {
         // Fallback for mock session or offline
-        const isMock = typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
+        const isMock =
+          typeof window !== "undefined" && localStorage.getItem("mathchines.mock_auth") === "true";
         if (isMock) {
           let mockId = "demo-user-id";
           try {
@@ -257,7 +258,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
                       >
                         <span className="text-xl">{c.flag}</span>
                         <div className="mt-1 font-semibold text-xs truncate">{c.name}</div>
-                        <div className="text-[9px] text-muted-foreground truncate">{c.curriculum}</div>
+                        <div className="text-[9px] text-muted-foreground truncate">
+                          {c.curriculum}
+                        </div>
                         {active && (
                           <CheckCircle2 className="absolute right-2 top-2 h-3.5 w-3.5 text-primary" />
                         )}
@@ -274,7 +277,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
                   <span className="text-3xl">{selectedCountry.flag}</span>
                   <div>
                     <div className="font-semibold text-xs">{selectedCountry.name}</div>
-                    <div className="text-[9px] text-muted-foreground">{selectedCountry.curriculum}</div>
+                    <div className="text-[9px] text-muted-foreground">
+                      {selectedCountry.curriculum}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -327,20 +332,22 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
 
               {isOpen && (
                 <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-border bg-card p-1.5 shadow-lg backdrop-blur-xl animate-in slide-in-from-top-2 duration-150">
-                  {getCountriesList().filter((c) =>
-                    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    c.curriculum.toLowerCase().includes(searchQuery.toLowerCase())
+                  {getCountriesList().filter(
+                    (c) =>
+                      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      c.curriculum.toLowerCase().includes(searchQuery.toLowerCase()),
                   ).length === 0 ? (
                     <div className="p-3 text-center text-xs text-muted-foreground">
                       No matching countries found
                     </div>
                   ) : (
                     getCountriesList()
-                      .filter((c) =>
-                        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        c.curriculum.toLowerCase().includes(searchQuery.toLowerCase())
+                      .filter(
+                        (c) =>
+                          c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          c.curriculum.toLowerCase().includes(searchQuery.toLowerCase()),
                       )
                       .map((c) => (
                         <button
@@ -357,7 +364,9 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
                           <span className="text-lg shrink-0">{c.flag}</span>
                           <div className="flex-1 min-w-0">
                             <div className="font-medium truncate text-xs">{c.name}</div>
-                            <div className="text-[9px] text-muted-foreground truncate">{c.curriculum}</div>
+                            <div className="text-[9px] text-muted-foreground truncate">
+                              {c.curriculum}
+                            </div>
                           </div>
                           {c.code === country && (
                             <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />

@@ -160,7 +160,7 @@ export function SlideDeckPlayer({
           toast.error(
             error.message.toLowerCase().includes("invalid")
               ? "Invalid email or password."
-              : error.message
+              : error.message,
           );
           return;
         }
@@ -329,7 +329,9 @@ export function SlideDeckPlayer({
     }
     setIsGenerating(true);
     try {
-      const response = await generateDeckFromDocument({ data: { documentText: documentInputText } });
+      const response = await generateDeckFromDocument({
+        data: { documentText: documentInputText },
+      });
       const parsed = parseMarkdownToDecks(response.markdown);
       const aiSlides = [...parsed.productSlides, ...parsed.investorSlides];
       if (aiSlides.length === 0) {
@@ -391,19 +393,17 @@ export function SlideDeckPlayer({
       return (
         <div className="grid gap-6 md:grid-cols-2 items-center animate-fade-in text-left">
           <div className="space-y-3">
-            <h3 className="text-2xl font-bold text-slate-100 font-display">
-              {slide.title}
-            </h3>
+            <h3 className="text-2xl font-bold text-slate-100 font-display">{slide.title}</h3>
             <p className="text-xs text-slate-400 leading-relaxed font-sans">
               {slide.subtitle || "Frictionless Learner Identity & Progress Preservation"}
             </p>
-            
+
             <ul className="mt-4 space-y-3">
               {slide.bullets.map((bullet, idx) => {
                 const parts = bullet.split(/[:·]/);
                 const heading = parts[0]?.replace(/\*\*/g, "").trim() || "Security";
                 const desc = parts.slice(1).join(":")?.replace(/\*\*/g, "").trim() || "";
-                
+
                 return (
                   <li key={idx} className="flex items-start gap-2.5">
                     <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20">
@@ -422,7 +422,7 @@ export function SlideDeckPlayer({
           {/* Interactive Auth Card */}
           <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-5 shadow-xl backdrop-blur-md max-w-sm w-full mx-auto relative overflow-hidden">
             <div className="absolute -left-10 -top-10 -z-10 h-32 w-32 rounded-full bg-sky-500/5 blur-2xl" />
-            
+
             {currentUser ? (
               /* User is Logged In: Show Stats Card */
               <div className="space-y-4 text-center animate-fade-in py-2">
@@ -642,13 +642,13 @@ export function SlideDeckPlayer({
                 {slide.subtitle || "Why Mathematics is Feared Globally"}
               </h3>
               <p className="mt-3 text-sm text-slate-400 leading-relaxed">
-                Traditional mathematics instruction leaves students struggling. Without personalization
-                or immediate support, they hit brick walls.
+                Traditional mathematics instruction leaves students struggling. Without
+                personalization or immediate support, they hit brick walls.
               </p>
               <div className="mt-6 border-l-4 border-coral bg-coral/5 p-4 rounded-r-xl">
                 <p className="text-xs italic text-slate-300">
-                  No single math platform is purpose-built for both African and Western curricula. Most
-                  require fast internet and are priced out of reach.
+                  No single math platform is purpose-built for both African and Western curricula.
+                  Most require fast internet and are priced out of reach.
                 </p>
               </div>
             </div>
@@ -658,7 +658,10 @@ export function SlideDeckPlayer({
                 const heading = parts[0]?.trim() || "Bottleneck";
                 const desc = parts[1]?.trim() || "";
                 return (
-                  <div key={idx} className="rounded-xl border border-slate-800 bg-slate-950/40 p-3.5">
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-slate-800 bg-slate-950/40 p-3.5"
+                  >
                     <div className="text-xs font-bold text-coral flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-coral animate-pulse" />
                       {heading}
@@ -746,9 +749,7 @@ export function SlideDeckPlayer({
                       <p className="mt-2 text-xs text-slate-400">{desc}</p>
                     </div>
                   );
-                }) || (
-                  <div className="text-slate-400 text-xs">Error parsing solution rows.</div>
-                )}
+                }) || <div className="text-slate-400 text-xs">Error parsing solution rows.</div>}
               </div>
             )}
           </div>
@@ -789,7 +790,7 @@ export function SlideDeckPlayer({
                 const parts = b.split("·");
                 const nameSection = parts[0]?.trim() || "";
                 const role = parts[1]?.trim() || "Learner";
-                
+
                 const points = parts.slice(2).map((p) => {
                   const subParts = p.split(":");
                   return {
@@ -799,11 +800,18 @@ export function SlideDeckPlayer({
                 });
 
                 const icons = [Users, GraduationCap, WifiOff];
-                const colors = ["text-sky-400 bg-sky-500/10", "text-emerald-400 bg-emerald-500/10", "text-coral bg-coral/10"];
+                const colors = [
+                  "text-sky-400 bg-sky-500/10",
+                  "text-emerald-400 bg-emerald-500/10",
+                  "text-coral bg-coral/10",
+                ];
                 const SelectedIcon = icons[i % icons.length] || Users;
 
                 return (
-                  <div key={i} className="rounded-2xl border border-slate-800 bg-slate-950/40 p-5 animate-fade-in">
+                  <div
+                    key={i}
+                    className="rounded-2xl border border-slate-800 bg-slate-950/40 p-5 animate-fade-in"
+                  >
                     <div className="flex items-center gap-2">
                       <div className={`rounded-lg p-2 ${colors[i % colors.length]}`}>
                         <SelectedIcon className="h-5 w-5" />
@@ -830,12 +838,42 @@ export function SlideDeckPlayer({
 
       if (titleLower.includes("student success loop") || titleLower.includes("learning journey")) {
         const defaultSteps = [
-          { step: "01", label: "Select Grade", icon: Globe2, desc: "GES, CCSS, NERDC syllabus instantly mapped." },
-          { step: "02", label: "Diagnostic", icon: Brain, desc: "5-question gap quiz sets starting point." },
-          { step: "03", label: "Visual Lesson", icon: Play, desc: "Expert animations explaining core concept." },
-          { step: "04", label: "Adaptive Practice", icon: Zap, desc: "IRT difficulty adjusts in real time." },
-          { step: "05", label: "Correction", icon: Sparkles, desc: "Error correction details why you failed." },
-          { step: "06", label: "Mastery Badge", icon: Award, desc: "Gain XP, streaks, and custom rewards." },
+          {
+            step: "01",
+            label: "Select Grade",
+            icon: Globe2,
+            desc: "GES, CCSS, NERDC syllabus instantly mapped.",
+          },
+          {
+            step: "02",
+            label: "Diagnostic",
+            icon: Brain,
+            desc: "5-question gap quiz sets starting point.",
+          },
+          {
+            step: "03",
+            label: "Visual Lesson",
+            icon: Play,
+            desc: "Expert animations explaining core concept.",
+          },
+          {
+            step: "04",
+            label: "Adaptive Practice",
+            icon: Zap,
+            desc: "IRT difficulty adjusts in real time.",
+          },
+          {
+            step: "05",
+            label: "Correction",
+            icon: Sparkles,
+            desc: "Error correction details why you failed.",
+          },
+          {
+            step: "06",
+            label: "Mastery Badge",
+            icon: Award,
+            desc: "Gain XP, streaks, and custom rewards.",
+          },
         ];
 
         return (
@@ -897,13 +935,15 @@ export function SlideDeckPlayer({
                               cIdx === 0
                                 ? "font-medium text-slate-200"
                                 : cIdx === 1
-                                ? "text-sky-400 font-bold"
-                                : "text-slate-400"
+                                  ? "text-sky-400 font-bold"
+                                  : "text-slate-400"
                             }`}
                           >
                             {cell.includes("(✓)") || cell.includes("Yes") || cell.trim() === "✓" ? (
                               <Check className="h-4.5 w-4.5 text-sky-400" />
-                            ) : cell.includes("(✕)") || cell.includes("No") || cell.trim() === "✕" ? (
+                            ) : cell.includes("(✕)") ||
+                              cell.includes("No") ||
+                              cell.trim() === "✕" ? (
                               <X className="h-4.5 w-4.5 text-slate-600" />
                             ) : (
                               cell
@@ -948,7 +988,11 @@ export function SlideDeckPlayer({
                 const heading = parts[0]?.trim() || "Plan";
                 const isPremium = heading.toLowerCase().includes("premium");
                 const price = isPremium ? (isGhsCurrency ? "GHS 2" : "$4.99") : "Custom";
-                const subText = isPremium ? (isGhsCurrency ? "/day airtime" : "/month") : "Bulk seat licensing";
+                const subText = isPremium
+                  ? isGhsCurrency
+                    ? "/day airtime"
+                    : "/month"
+                  : "Bulk seat licensing";
 
                 return (
                   <div
@@ -959,7 +1003,9 @@ export function SlideDeckPlayer({
                         : "border-slate-800 bg-slate-950/40"
                     }`}
                   >
-                    <span className={`text-[10px] font-bold ${isPremium ? "text-sky-400" : "text-emerald-400"}`}>
+                    <span
+                      className={`text-[10px] font-bold ${isPremium ? "text-sky-400" : "text-emerald-400"}`}
+                    >
                       {heading.toUpperCase()}
                     </span>
                     <h4 className="text-3xl font-extrabold text-white mt-1">
@@ -979,10 +1025,30 @@ export function SlideDeckPlayer({
 
       if (titleLower.includes("roadmap") || titleLower.includes("timeline")) {
         const milestones = [
-          { title: "Discovery", date: "Weeks 1-2", desc: "Curriculum mapping & stack definition.", status: "completed" },
-          { title: "Design", date: "Weeks 3-4", desc: "Wireframes, UI mockups, adaptive spec.", status: "completed" },
-          { title: "MVP Build", date: "Weeks 5-6", desc: "Core engines & offline capabilities.", status: "current" },
-          { title: "Launch", date: "Week 7", desc: "Ghana & US launch, micro-airtime payments.", status: "upcoming" },
+          {
+            title: "Discovery",
+            date: "Weeks 1-2",
+            desc: "Curriculum mapping & stack definition.",
+            status: "completed",
+          },
+          {
+            title: "Design",
+            date: "Weeks 3-4",
+            desc: "Wireframes, UI mockups, adaptive spec.",
+            status: "completed",
+          },
+          {
+            title: "MVP Build",
+            date: "Weeks 5-6",
+            desc: "Core engines & offline capabilities.",
+            status: "current",
+          },
+          {
+            title: "Launch",
+            date: "Week 7",
+            desc: "Ghana & US launch, micro-airtime payments.",
+            status: "upcoming",
+          },
         ];
 
         return (
@@ -1004,9 +1070,13 @@ export function SlideDeckPlayer({
 
                 return (
                   <div key={idx}>
-                    <div className={`absolute top-0 -translate-y-1/2 ${pos} h-3 w-3 rounded-full ${dotClass}`} />
+                    <div
+                      className={`absolute top-0 -translate-y-1/2 ${pos} h-3 w-3 rounded-full ${dotClass}`}
+                    />
                     {m.status === "current" && (
-                      <div className={`absolute top-0 -translate-y-1/2 ${pos} h-3 w-3 rounded-full bg-coral animate-ping`} />
+                      <div
+                        className={`absolute top-0 -translate-y-1/2 ${pos} h-3 w-3 rounded-full bg-coral animate-ping`}
+                      />
                     )}
                   </div>
                 );
@@ -1014,8 +1084,10 @@ export function SlideDeckPlayer({
 
               {milestones.map((step, idx) => (
                 <div key={idx} className="flex flex-col">
-                  <span className={`text-[9px] font-bold ${step.status === 'current' ? 'text-coral' : 'text-sky-400'}`}>
-                    {step.date} {step.status === 'current' && '(In Progress)'}
+                  <span
+                    className={`text-[9px] font-bold ${step.status === "current" ? "text-coral" : "text-sky-400"}`}
+                  >
+                    {step.date} {step.status === "current" && "(In Progress)"}
                   </span>
                   <h4 className="font-bold text-xs text-slate-200 mt-1">{step.title}</h4>
                   <p className="text-[10px] text-slate-400 mt-1 leading-snug">{step.desc}</p>
@@ -1093,7 +1165,11 @@ export function SlideDeckPlayer({
         return (
           <div className="text-center animate-fade-in space-y-4">
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-500/10 shadow-inner border border-emerald-500/20">
-              <img src={piLogo} alt="Mathchines Pi" className="h-12 w-12 object-contain animate-pulse" />
+              <img
+                src={piLogo}
+                alt="Mathchines Pi"
+                className="h-12 w-12 object-contain animate-pulse"
+              />
             </div>
             <div className="space-y-1">
               <span className="rounded-full bg-emerald-950/60 border border-emerald-800/40 px-3 py-1 text-[9px] font-semibold text-emerald-400">
@@ -1108,7 +1184,10 @@ export function SlideDeckPlayer({
                 const icons = [Coins, TrendingUp, ShieldCheck];
                 const SelectedIcon = icons[idx % icons.length] || Coins;
                 return (
-                  <div key={idx} className="flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2">
+                  <div
+                    key={idx}
+                    className="flex items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2"
+                  >
                     <SelectedIcon className="h-4 w-4 text-emerald-400" />
                     <span>{b}</span>
                   </div>
@@ -1127,9 +1206,9 @@ export function SlideDeckPlayer({
                 {slide.subtitle || "Capturing the Unserved Middle Class"}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                EdTech platforms in the West require credit cards and 4G internet. Emerging markets have cash
-                equivalents (airtime/mobile money) and low-connectivity devices. Mathchines bypasses these
-                bottlenecks directly.
+                EdTech platforms in the West require credit cards and 4G internet. Emerging markets
+                have cash equivalents (airtime/mobile money) and low-connectivity devices.
+                Mathchines bypasses these bottlenecks directly.
               </p>
               <div className="border-l-4 border-emerald-500 bg-emerald-500/5 p-4 rounded-r-xl">
                 <p className="text-xs italic text-slate-300">
@@ -1177,9 +1256,7 @@ export function SlideDeckPlayer({
         return (
           <div className="grid gap-6 md:grid-cols-2 items-center animate-fade-in">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-slate-100 font-display">
-                {slide.title}
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-100 font-display">{slide.title}</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 {slide.subtitle || "A Triple-Tiered Addressable Market"}
               </p>
@@ -1241,9 +1318,7 @@ export function SlideDeckPlayer({
         return (
           <div className="grid gap-6 md:grid-cols-3 animate-fade-in items-center">
             <div className="flex flex-col justify-center space-y-3">
-              <h3 className="text-2xl font-bold font-display text-slate-100">
-                {slide.title}
-              </h3>
+              <h3 className="text-2xl font-bold font-display text-slate-100">{slide.title}</h3>
               <p className="text-xs text-slate-400 leading-relaxed">
                 {slide.subtitle || "Subscription & Economics"}
               </p>
@@ -1320,7 +1395,8 @@ export function SlideDeckPlayer({
                 Revenue Projections
               </h3>
               <p className="text-[10px] text-slate-400 leading-normal">
-                {slide.subtitle || "Drag the levers below to model Mathchines' subscriber conversions, pricing, and valuation."}
+                {slide.subtitle ||
+                  "Drag the levers below to model Mathchines' subscriber conversions, pricing, and valuation."}
               </p>
 
               <div className="space-y-3 pt-2">
@@ -1392,16 +1468,28 @@ export function SlideDeckPlayer({
             {/* Calculations Dashboard & Live Area Chart */}
             <div className="lg:col-span-3 grid grid-cols-3 gap-3 border border-slate-800 bg-slate-950/40 p-4 rounded-2xl relative">
               <div className="border border-slate-900/60 bg-slate-900/20 p-2.5 rounded-xl text-center">
-                <span className="text-[8px] text-slate-500 font-mono uppercase block">Paid Subs</span>
-                <span className="text-lg font-extrabold text-white mt-1 block">{formatNumber(paidSubscribers)}</span>
+                <span className="text-[8px] text-slate-500 font-mono uppercase block">
+                  Paid Subs
+                </span>
+                <span className="text-lg font-extrabold text-white mt-1 block">
+                  {formatNumber(paidSubscribers)}
+                </span>
               </div>
               <div className="border border-slate-900/60 bg-slate-900/20 p-2.5 rounded-xl text-center">
-                <span className="text-[8px] text-slate-500 font-mono uppercase block">ARR (Annual)</span>
-                <span className="text-lg font-extrabold text-emerald-400 mt-1 block">{formatCurrency(arr)}</span>
+                <span className="text-[8px] text-slate-500 font-mono uppercase block">
+                  ARR (Annual)
+                </span>
+                <span className="text-lg font-extrabold text-emerald-400 mt-1 block">
+                  {formatCurrency(arr)}
+                </span>
               </div>
               <div className="border border-emerald-950/60 bg-emerald-950/10 p-2.5 rounded-xl text-center">
-                <span className="text-[8px] text-emerald-400 font-mono uppercase block">Valuation (8x)</span>
-                <span className="text-lg font-extrabold text-teal-300 mt-1 block">{formatCurrency(valuation)}</span>
+                <span className="text-[8px] text-emerald-400 font-mono uppercase block">
+                  Valuation (8x)
+                </span>
+                <span className="text-lg font-extrabold text-teal-300 mt-1 block">
+                  {formatCurrency(valuation)}
+                </span>
               </div>
 
               {/* Projections Area Chart */}
@@ -1421,7 +1509,10 @@ export function SlideDeckPlayer({
                       }}
                       className="h-full w-full"
                     >
-                      <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                      <AreaChart
+                        data={chartData}
+                        margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                      >
                         <defs>
                           <linearGradient id="colorArr" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
@@ -1429,7 +1520,12 @@ export function SlideDeckPlayer({
                           </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
-                        <XAxis dataKey="year" tick={{ fill: "#64748b", fontSize: 8 }} axisLine={false} tickLine={false} />
+                        <XAxis
+                          dataKey="year"
+                          tick={{ fill: "#64748b", fontSize: 8 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
                         <YAxis
                           tickFormatter={(v) => formatCurrency(v)}
                           tick={{ fill: "#64748b", fontSize: 8 }}
@@ -1441,11 +1537,21 @@ export function SlideDeckPlayer({
                           content={
                             <ChartTooltipContent
                               labelFormatter={(l) => `Milestone: ${l}`}
-                              formatter={(value) => [formatCurrency(Number(value)), "Projected ARR"]}
+                              formatter={(value) => [
+                                formatCurrency(Number(value)),
+                                "Projected ARR",
+                              ]}
                             />
                           }
                         />
-                        <Area type="monotone" dataKey="arr" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorArr)" />
+                        <Area
+                          type="monotone"
+                          dataKey="arr"
+                          stroke="#10b981"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorArr)"
+                        />
                       </AreaChart>
                     </ChartContainer>
                   </div>
@@ -1466,20 +1572,22 @@ export function SlideDeckPlayer({
         return (
           <div className="grid gap-6 md:grid-cols-2 items-center animate-fade-in">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-slate-100 font-display">
-                {slide.title}
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-100 font-display">{slide.title}</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 {slide.subtitle || "Telecom & Growth Moats"}
               </p>
               <div className="flex gap-4 pt-2">
                 <div className="rounded-xl border border-slate-800 bg-slate-900/30 px-3 py-2 text-center flex-1">
                   <div className="text-xs text-emerald-400 font-bold">1-Click Billing</div>
-                  <span className="text-[9px] text-slate-400 block mt-0.5">Airtime direct deduct</span>
+                  <span className="text-[9px] text-slate-400 block mt-0.5">
+                    Airtime direct deduct
+                  </span>
                 </div>
                 <div className="rounded-xl border border-slate-800 bg-slate-900/30 px-3 py-2 text-center flex-1">
                   <div className="text-xs text-teal-400 font-bold">Zero-Rated Data</div>
-                  <span className="text-[9px] text-slate-400 block mt-0.5">No internet data fees</span>
+                  <span className="text-[9px] text-slate-400 block mt-0.5">
+                    No internet data fees
+                  </span>
                 </div>
               </div>
             </div>
@@ -1489,10 +1597,34 @@ export function SlideDeckPlayer({
                 Carrier Distribution Funnel
               </span>
               {[
-                { step: "01. Telco API Hook", label: "MTN, Telecel integration yields billing token", pct: "100%", width: "w-full", bg: "bg-emerald-500" },
-                { step: "02. Zero-Rating Proxy", label: "No data costs bars data-drain dropouts", pct: "85%", width: "w-[85%]", bg: "bg-teal-500" },
-                { step: "03. Classroom Viral Loop", label: "Teachers push content to parental contacts via SMS", pct: "65%", width: "w-[65%]", bg: "bg-sky-500" },
-                { step: "04. Daily Churn Protection", label: "Automatic micro-renewal reduces drop-offs", pct: "40%", width: "w-[40%]", bg: "bg-purple-500" },
+                {
+                  step: "01. Telco API Hook",
+                  label: "MTN, Telecel integration yields billing token",
+                  pct: "100%",
+                  width: "w-full",
+                  bg: "bg-emerald-500",
+                },
+                {
+                  step: "02. Zero-Rating Proxy",
+                  label: "No data costs bars data-drain dropouts",
+                  pct: "85%",
+                  width: "w-[85%]",
+                  bg: "bg-teal-500",
+                },
+                {
+                  step: "03. Classroom Viral Loop",
+                  label: "Teachers push content to parental contacts via SMS",
+                  pct: "65%",
+                  width: "w-[65%]",
+                  bg: "bg-sky-500",
+                },
+                {
+                  step: "04. Daily Churn Protection",
+                  label: "Automatic micro-renewal reduces drop-offs",
+                  pct: "40%",
+                  width: "w-[40%]",
+                  bg: "bg-purple-500",
+                },
               ].map((item, idx) => (
                 <div key={idx} className="space-y-1">
                   <div className="flex justify-between text-[9px] font-mono leading-none">
@@ -1513,15 +1645,14 @@ export function SlideDeckPlayer({
         return (
           <div className="grid gap-6 md:grid-cols-2 items-center animate-fade-in">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-slate-100 font-display">
-                {slide.title}
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-100 font-display">{slide.title}</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 {slide.subtitle || "Lightweight Client & Syllabus Mapping"}
               </p>
               <div className="border-l-4 border-teal-500 bg-teal-500/5 p-4 rounded-r-xl">
                 <p className="text-xs italic text-slate-300">
-                  Our offline database syncing guarantees that a student can learn, quiz, and level up for weeks without connecting to a cellular tower.
+                  Our offline database syncing guarantees that a student can learn, quiz, and level
+                  up for weeks without connecting to a cellular tower.
                 </p>
               </div>
             </div>
@@ -1553,16 +1684,20 @@ export function SlideDeckPlayer({
         return (
           <div className="grid gap-6 md:grid-cols-2 items-center animate-fade-in">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-slate-100 font-display">
-                {slide.title}
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-100 font-display">{slide.title}</h3>
               <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 {slide.subtitle || "The $1.5M Seed Allocation"}
               </p>
               <div className="border border-emerald-950/60 bg-emerald-950/10 p-4 rounded-xl text-center">
-                <span className="text-xs text-slate-400 block font-semibold uppercase">The Funding Ask</span>
-                <span className="text-3xl font-black text-white font-display block mt-1">$1.5 Million Seed</span>
-                <span className="text-[10px] text-emerald-400 font-semibold block mt-1">18-Month Operational Runway</span>
+                <span className="text-xs text-slate-400 block font-semibold uppercase">
+                  The Funding Ask
+                </span>
+                <span className="text-3xl font-black text-white font-display block mt-1">
+                  $1.5 Million Seed
+                </span>
+                <span className="text-[10px] text-emerald-400 font-semibold block mt-1">
+                  18-Month Operational Runway
+                </span>
               </div>
             </div>
             <div className="space-y-4 p-5 border border-slate-800 bg-slate-950/40 rounded-2xl">
@@ -1573,11 +1708,11 @@ export function SlideDeckPlayer({
                 const parts = b.split(":") || [b];
                 const heading = parts[0]?.trim() || "Item";
                 const desc = parts.slice(1).join(":")?.trim() || "";
-                
+
                 const percentMatch = heading.match(/\d+%/);
                 const pct = percentMatch ? percentMatch[0] : "33%";
                 const barWidth = `w-[${pct}]`;
-                
+
                 const colors = ["bg-emerald-500", "bg-teal-500", "bg-sky-500"];
 
                 return (
@@ -1587,7 +1722,10 @@ export function SlideDeckPlayer({
                       <span className="font-mono font-bold text-slate-100">{desc}</span>
                     </div>
                     <div className="h-2 w-full rounded bg-slate-900 overflow-hidden">
-                      <div className={`h-full ${colors[idx % colors.length]} ${barWidth}`} style={{ width: pct }} />
+                      <div
+                        className={`h-full ${colors[idx % colors.length]} ${barWidth}`}
+                        style={{ width: pct }}
+                      />
                     </div>
                   </div>
                 );
@@ -1604,7 +1742,8 @@ export function SlideDeckPlayer({
             desc: "Product-market fit validation in West Africa. Establish user engagement benchmarks and initial syllabus compilation maps.",
             metric: "Target: 50k MAUs",
             icon: Globe2,
-            color: "text-emerald-400 border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/30",
+            color:
+              "text-emerald-400 border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/30",
           },
           {
             title: "Year 2 (Carrier & Scale)",
@@ -1636,7 +1775,7 @@ export function SlideDeckPlayer({
                     className={`rounded-2xl border p-4 space-y-3 relative overflow-hidden flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${y.color}`}
                   >
                     <div className="absolute -left-10 -top-10 -z-10 h-24 w-24 rounded-full bg-emerald-500/5 blur-2xl" />
-                    
+
                     <div className="flex justify-between items-start gap-2">
                       <span className="text-[10px] font-bold uppercase tracking-wider font-display">
                         {y.title}
@@ -1796,9 +1935,12 @@ export function SlideDeckPlayer({
               </DialogTrigger>
               <DialogContent className="bg-slate-950 border-slate-800 text-slate-100 sm:max-w-[600px] max-h-[85vh] flex flex-col justify-between">
                 <DialogHeader>
-                  <DialogTitle className="font-display text-white text-xl">Load Slide Deck Markdown</DialogTitle>
+                  <DialogTitle className="font-display text-white text-xl">
+                    Load Slide Deck Markdown
+                  </DialogTitle>
                   <DialogDescription className="text-slate-400 text-xs">
-                    Paste any Marp/Maud formatted presentation markdown slides separated by "---" lines.
+                    Paste any Marp/Maud formatted presentation markdown slides separated by "---"
+                    lines.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 py-4">
@@ -1827,7 +1969,10 @@ export function SlideDeckPlayer({
                   >
                     Cancel
                   </Button>
-                  <Button onClick={handleLoadCustomMarkdown} className="bg-sky-500 text-white hover:bg-sky-400">
+                  <Button
+                    onClick={handleLoadCustomMarkdown}
+                    className="bg-sky-500 text-white hover:bg-sky-400"
+                  >
                     Load Slide Deck
                   </Button>
                 </DialogFooter>
@@ -1852,7 +1997,9 @@ export function SlideDeckPlayer({
                     AI Presentation Builder
                   </DialogTitle>
                   <DialogDescription className="text-slate-400 text-xs">
-                    Paste any raw text context (e.g. business plans, school notes, pitch ideas) and Gemini 2.5 Flash will automatically summarize and format it into a stunning slide deck.
+                    Paste any raw text context (e.g. business plans, school notes, pitch ideas) and
+                    Gemini 2.5 Flash will automatically summarize and format it into a stunning
+                    slide deck.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 py-4">
@@ -1906,7 +2053,11 @@ export function SlideDeckPlayer({
             }`}
             title="Toggle between slideshow and grid view"
           >
-            {isGridView ? <Presentation className="h-3.5 w-3.5" /> : <LayoutGrid className="h-3.5 w-3.5" />}
+            {isGridView ? (
+              <Presentation className="h-3.5 w-3.5" />
+            ) : (
+              <LayoutGrid className="h-3.5 w-3.5" />
+            )}
             {isGridView ? "Slideshow" : "All Slides"}
           </button>
 
@@ -2030,7 +2181,8 @@ export function SlideDeckPlayer({
                   {slides[activeSlide]?.title || "Slide"}
                 </span>
                 <span className="text-xs font-mono text-slate-500">
-                  {String(activeSlide + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+                  {String(activeSlide + 1).padStart(2, "0")} /{" "}
+                  {String(slides.length).padStart(2, "0")}
                 </span>
               </div>
 
@@ -2092,7 +2244,9 @@ export function SlideDeckPlayer({
             </div>
 
             <div className="mt-6 border-t border-slate-800/60 pt-4">
-              <span className="text-[10px] text-slate-500 font-bold uppercase">Quick Shortcuts</span>
+              <span className="text-[10px] text-slate-500 font-bold uppercase">
+                Quick Shortcuts
+              </span>
               <div className="mt-2 grid grid-cols-2 gap-2 text-[10px] text-slate-400 font-mono">
                 <div className="rounded bg-slate-950 p-1.5 text-center">
                   <span className="text-sky-400 font-bold">Space/Right</span> Next Slide

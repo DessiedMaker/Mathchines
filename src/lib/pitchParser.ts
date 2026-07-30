@@ -60,7 +60,7 @@ function parseDeck(deckMarkdown: string): ParsedSlide[] {
         splitIndices.push(match.index);
       }
     }
-    
+
     for (let i = 0; i < splitIndices.length; i++) {
       const start = splitIndices[i];
       const end = i < splitIndices.length - 1 ? splitIndices[i + 1] : deckMarkdown.length;
@@ -98,11 +98,11 @@ function parseDeck(deckMarkdown: string): ParsedSlide[] {
 
 function parseSlide(slideText: string): ParsedSlide {
   const lines = slideText.split("\n");
-  
+
   const props: Record<string, string> = {};
   const commentRegex = /<!--\s*([\w_-]+)\s*:\s*([^\s>]+)\s*-->/g;
   let match;
-  
+
   // 1. Extract comments/metadata properties
   while ((match = commentRegex.exec(slideText)) !== null) {
     props[match[1]] = match[2];
@@ -111,10 +111,10 @@ function parseSlide(slideText: string): ParsedSlide {
   // 2. Extract presenter notes
   const notesLines: string[] = [];
   const contentLines: string[] = [];
-  
+
   for (const line of lines) {
     const trimmedLine = line.trim();
-    
+
     // Ignore comment lines
     if (trimmedLine.startsWith("<!--") && trimmedLine.endsWith("-->")) {
       continue;
@@ -134,14 +134,14 @@ function parseSlide(slideText: string): ParsedSlide {
   }
 
   const notes = notesLines.join("\n").trim();
-  
+
   // 3. Process remaining content to find title, subtitle, bullets, tables, and mermaid
   let title = "";
   let subtitle = "";
   let bullets: string[] = [];
   let mermaidCode = "";
   let inMermaid = false;
-  
+
   const tableRows: string[][] = [];
   let tableHeaders: string[] = [];
   let isTableDivider = false;
@@ -170,11 +170,14 @@ function parseSlide(slideText: string): ParsedSlide {
     }
 
     // Extract Title (first line starting with '# ' or '### Slide')
-    if (!title && (trimmedLine.startsWith("# ") || trimmedLine.toLowerCase().startsWith("### slide "))) {
+    if (
+      !title &&
+      (trimmedLine.startsWith("# ") || trimmedLine.toLowerCase().startsWith("### slide "))
+    ) {
       let parsedTitle = trimmedLine.startsWith("# ")
         ? trimmedLine.replace(/^#\s+/, "")
         : trimmedLine.replace(/^###\s+Slide\s+\d+:\s*/i, "");
-      
+
       // Strip trailing parentheticals
       parsedTitle = parsedTitle.replace(/\s*\([^)]*\)\s*$/, "").trim();
       title = parsedTitle;
@@ -196,7 +199,13 @@ function parseSlide(slideText: string): ParsedSlide {
     }
 
     // Support custom Subtitle bullet label in PITCH.md
-    if (!subtitle && (trimmedLine.startsWith("- **Subtitle**:") || trimmedLine.startsWith("- Subtitle:") || trimmedLine.startsWith("* **Subtitle**:") || trimmedLine.startsWith("* Subtitle:"))) {
+    if (
+      !subtitle &&
+      (trimmedLine.startsWith("- **Subtitle**:") ||
+        trimmedLine.startsWith("- Subtitle:") ||
+        trimmedLine.startsWith("* **Subtitle**:") ||
+        trimmedLine.startsWith("* Subtitle:"))
+    ) {
       subtitle = trimmedLine.replace(/^[-*]\s+(\*\*Subtitle\*\*|Subtitle):\s*/i, "").trim();
       continue;
     }
@@ -228,7 +237,7 @@ function parseSlide(slideText: string): ParsedSlide {
         .split("|")
         .map((p) => p.trim())
         .filter((_, idx, arr) => idx > 0 && idx < arr.length - 1); // remove leading/trailing empty elements from outer pipes
-      
+
       const isDivider = parts.every((p) => /^:?-+:?$/.test(p));
       if (isDivider) {
         isTableDivider = true;
@@ -244,7 +253,7 @@ function parseSlide(slideText: string): ParsedSlide {
   }
 
   const rawContent = finalContentLines.join("\n").trim();
-  
+
   // 4. Custom Transformations for slide deck content mapping compatibility
   const titleLower = title.toLowerCase();
   if (titleLower === "primary personas") {
@@ -287,10 +296,19 @@ function parseSlide(slideText: string): ParsedSlide {
     table = {
       headers: ["Before Mathchines", "After Mathchines"],
       rows: [
-        ["**Frustrated & Stuck** · Gaps expand", "**Error Correction Engine** · Step-by-step guidance"],
-        ["**Data Guzzlers** · Requires constant internet", "**Offline Sync Mode** · Download once, practice anywhere"],
-        ["**Out-of-Sync Content** · Generic syllabi", "**Dual Syllabus Compiler** · GES & Western Common Core"]
-      ]
+        [
+          "**Frustrated & Stuck** · Gaps expand",
+          "**Error Correction Engine** · Step-by-step guidance",
+        ],
+        [
+          "**Data Guzzlers** · Requires constant internet",
+          "**Offline Sync Mode** · Download once, practice anywhere",
+        ],
+        [
+          "**Out-of-Sync Content** · Generic syllabi",
+          "**Dual Syllabus Compiler** · GES & Western Common Core",
+        ],
+      ],
     };
   }
 
