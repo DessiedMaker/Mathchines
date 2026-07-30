@@ -354,7 +354,7 @@ const ratiosTopic: Topic = {
   id: "ratios-proportions",
   title: "Ratios and Proportions",
   objective: "Understand ratios, find equivalent ratios, and solve proportion problems.",
-  videoUrl: "https://www.youtube.com/embed/HPDWOZc_lI0",
+  videoUrl: "https://www.youtube.com/embed/fT3LEL2k6Z0",
   workedExamples: [
     {
       title: "Example 1 — Simplify a Ratio",
