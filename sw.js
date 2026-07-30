@@ -4,11 +4,7 @@ const CACHE_NAME = "mathchines-cache-v1";
 const scopePath = new URL(self.registration.scope).pathname;
 const basePath = scopePath.endsWith("/") ? scopePath : scopePath + "/";
 
-const PRECACHE_ASSETS = [
-  basePath,
-  `${basePath}learn`,
-  `${basePath}auth`
-];
+const PRECACHE_ASSETS = [basePath, `${basePath}learn`, `${basePath}auth`];
 
 // Install Event - Precache primary entry points
 self.addEventListener("install", (event) => {
