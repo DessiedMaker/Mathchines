@@ -640,4 +640,8 @@ export function getTopic(topicId: string): Topic | undefined {
   return sharedTopics.find((t) => t.id === topicId);
 }
 
+export function isUsingDatabaseData(): boolean {
+  return dbCountries !== null && dbCountries.length > 0;
+}
+
 export const ALL_TOPICS = sharedTopics;

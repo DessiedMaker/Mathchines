@@ -9,15 +9,12 @@ import {
   ArrowRight,
   CheckCircle2,
   Users,
-  PlusCircle,
   BookOpen,
   Award,
   Flame,
   Trophy,
   Plus,
   GraduationCap,
-  Mail,
-  User as UserIcon,
   Trash2,
   Search,
 } from "lucide-react";
@@ -28,7 +25,7 @@ export const Route = createFileRoute("/learn/")({
       { title: "Dashboard — Mathchines" },
       {
         name: "description",
-        content: "Interactive math learning dashboard for students, teachers, and parents.",
+        content: "Interactive math learning dashboard for students and parents.",
       },
     ],
   }),
@@ -38,7 +35,7 @@ export const Route = createFileRoute("/learn/")({
 function LearnIndex() {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
-  const [role, setRoleState] = useState<"student" | "teacher" | "parent">("student");
+  const [role, setRoleState] = useState<"student" | "parent">("student");
   const [loading, setLoading] = useState(true);
 
   // Load user details
@@ -89,11 +86,7 @@ function LearnIndex() {
       <div className="mb-6 flex items-center justify-between border-b border-border/60 pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight capitalize">
-            {role === "student"
-              ? "Student Workspace"
-              : role === "teacher"
-                ? "Teacher Admin Console"
-                : "Parent Tracker"}
+            {role === "student" ? "Student Workspace" : "Parent Tracker"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Logged in as a {role}. You can switch roles from your profile layout.
@@ -101,8 +94,7 @@ function LearnIndex() {
         </div>
         <button
           onClick={async () => {
-            const nextRole =
-              role === "student" ? "teacher" : role === "teacher" ? "parent" : "student";
+            const nextRole = role === "student" ? "parent" : "student";
             setRole(nextRole);
             setRoleState(nextRole);
             toast.success(`Switched role to ${nextRole}`);
@@ -114,7 +106,6 @@ function LearnIndex() {
       </div>
 
       {role === "student" && <StudentDashboard userId={userId} navigate={navigate} />}
-      {role === "teacher" && <TeacherDashboard userId={userId} />}
       {role === "parent" && <ParentDashboard userId={userId} />}
     </div>
   );
@@ -482,243 +473,7 @@ function StudentDashboard({ userId, navigate }: { userId: string; navigate: any 
   );
 }
 
-/* ==========================================================================
-   TEACHER DASHBOARD
-   ========================================================================== */
-function TeacherDashboard({ userId }: { userId: string }) {
-  const [classrooms, setClassrooms] = useState<any[]>([]);
-  const [selectedClass, setSelectedClass] = useState<any | null>(null);
-  const [enrolledStudents, setEnrolledStudents] = useState<any[]>([]);
-  const [newClassName, setNewClassName] = useState("");
-  const [newGrade, setNewGrade] = useState("");
-  const [creating, setCreating] = useState(false);
 
-  useEffect(() => {
-    void fetchClassrooms();
-  }, []);
-
-  async function fetchClassrooms() {
-    try {
-      const { data, error } = await supabase
-        .from("classrooms")
-        .select("*, grades(label)" as any)
-        .eq("teacher_id", userId);
-      if (data) setClassrooms(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async function handleCreateClass(e: React.FormEvent) {
-    e.preventDefault();
-    if (!newClassName.trim() || !newGrade) return;
-    setCreating(true);
-
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    try {
-      const { error } = await supabase.from("classrooms").insert({
-        name: newClassName.trim(),
-        grade_id: newGrade,
-        teacher_id: userId,
-        code,
-      } as any);
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success(`Classroom "${newClassName}" created! Code: ${code}`);
-        setNewClassName("");
-        setNewGrade("");
-        void fetchClassrooms();
-      }
-    } catch (err) {
-      toast.error("Failed to create classroom.");
-    } finally {
-      setCreating(false);
-    }
-  }
-
-  async function fetchClassroomDetails(cls: any) {
-    setSelectedClass(cls);
-    setEnrolledStudents([]);
-    try {
-      const { data, error } = await supabase
-        .from("classroom_enrollments")
-        .select(
-          `
-          student_id,
-          profiles:student_id (
-            id,
-            display_name,
-            email,
-            xp,
-            streak,
-            mastered_topics
-          )
-        ` as any,
-        )
-        .eq("classroom_id", cls.id);
-      if (data) setEnrolledStudents(data.map((d: any) => d.profiles));
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  return (
-    <div className="grid gap-10 lg:grid-cols-3">
-      {/* Classrooms List & Creator */}
-      <div className="lg:col-span-2 space-y-6">
-        <section className="rounded-3xl border border-border bg-card p-6 md:p-8">
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Users className="h-6 w-6 text-primary" /> Active Classrooms
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage your rosters, share classroom code keys, and track learning progress.
-          </p>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {classrooms.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground col-span-2">
-                No active classrooms. Create one below to invite your students!
-              </div>
-            ) : (
-              classrooms.map((cls) => {
-                const active = selectedClass?.id === cls.id;
-                return (
-                  <button
-                    key={cls.id}
-                    onClick={() => fetchClassroomDetails(cls)}
-                    className={`rounded-2xl border p-5 text-left transition-all ${
-                      active
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border bg-card hover:border-foreground/20"
-                    }`}
-                  >
-                    <h3 className="font-semibold text-lg">{cls.name}</h3>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Curriculum grade: {cls.grades?.label || "Unassigned"}
-                    </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-xs font-semibold">
-                      <span className="font-mono text-primary font-bold">{cls.code}</span>
-                      <span className="text-muted-foreground">View Roster &rarr;</span>
-                    </div>
-                  </button>
-                );
-              })
-            )}
-          </div>
-        </section>
-
-        {/* Detailed Classroom Roster */}
-        {selectedClass && (
-          <section className="rounded-3xl border border-border bg-card p-6 md:p-8">
-            <h2 className="text-2xl font-bold">{selectedClass.name} — Student Roster</h2>
-            <p className="text-xs text-muted-foreground mt-1">
-              Classroom Code:{" "}
-              <span className="font-mono font-bold text-foreground bg-accent px-2 py-0.5 rounded">
-                {selectedClass.code}
-              </span>
-            </p>
-
-            <div className="mt-6 space-y-3">
-              {enrolledStudents.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-                  No students enrolled in this classroom yet. Share the code to invite them!
-                </div>
-              ) : (
-                enrolledStudents.map((student) => (
-                  <div
-                    key={student.id}
-                    className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border p-4 bg-background"
-                  >
-                    <div>
-                      <h4 className="font-semibold text-sm">
-                        {student.display_name || student.email}
-                      </h4>
-                      <p className="text-[10px] text-muted-foreground">{student.email}</p>
-                    </div>
-                    <div className="flex gap-4 text-xs">
-                      <div className="flex items-center gap-1">
-                        <Trophy className="h-4 w-4 text-coral" />
-                        <span className="font-bold">{student.xp || 0} XP</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Flame className="h-4 w-4 text-gold-foreground" />
-                        <span className="font-bold">{student.streak || 0}d streak</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Award className="h-4 w-4 text-primary" />
-                        <span className="font-bold">
-                          {(student.mastered_topics || []).length} mastered
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </section>
-        )}
-      </div>
-
-      {/* Classroom Creator Sidebar */}
-      <aside>
-        <section className="rounded-3xl border border-border bg-card p-6">
-          <h2 className="text-lg font-bold flex items-center gap-2">
-            <PlusCircle className="h-5 w-5 text-primary" /> Create Classroom
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Creates a workspace and links it to a localized syllabus path.
-          </p>
-
-          <form onSubmit={handleCreateClass} className="mt-6 space-y-4">
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground">Class Name</label>
-              <input
-                type="text"
-                required
-                maxLength={40}
-                placeholder="e.g. Algebra Period 3"
-                value={newClassName}
-                onChange={(e) => setNewClassName(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm mt-1 outline-none focus:border-primary"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground">
-                Syllabus Grade Mapping
-              </label>
-              <select
-                required
-                value={newGrade}
-                onChange={(e) => setNewGrade(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm mt-1 outline-none focus:border-primary focus:ring-1 focus:ring-primary max-h-60"
-              >
-                <option value="">Select a grade...</option>
-                {getCountriesList().map((c) => (
-                  <optgroup key={c.code} label={`${c.flag} ${c.name} (${c.curriculum})`}>
-                    {c.grades.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.label}
-                      </option>
-                    ))}
-                  </optgroup>
-                ))}
-              </select>
-            </div>
-            <button
-              type="submit"
-              disabled={creating || !newClassName.trim() || !newGrade}
-              className="w-full rounded-xl bg-foreground py-2.5 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-50"
-            >
-              {creating ? "Creating..." : "Generate Classroom"}
-            </button>
-          </form>
-        </section>
-      </aside>
-    </div>
-  );
-}
 
 /* ==========================================================================
    PARENT DASHBOARD

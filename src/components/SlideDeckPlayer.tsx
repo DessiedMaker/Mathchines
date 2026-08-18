@@ -1151,7 +1151,7 @@ export function SlideDeckPlayer({
                 to="/learn"
                 className="rounded-full border border-slate-700 bg-slate-900 px-6 py-2.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
               >
-                Try Learning Demo
+                Start Learning
               </Link>
             </div>
           </div>

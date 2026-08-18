@@ -73,7 +73,7 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("password123");
+  const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
 
   // Redirect if already signed in
@@ -168,33 +168,6 @@ function AuthPage() {
             toast.success("Signed in locally (Mock Mode)!");
             navigate({ to: "/learn" });
             return;
-          }
-          if (
-            parsed.data.email === "demo@mathchines.com" &&
-            parsed.data.password === "password123"
-          ) {
-            const { error: signUpError } = await supabase.auth.signUp({
-              email: parsed.data.email,
-              password: parsed.data.password,
-              options: {
-                data: { display_name: "Demo Learner" },
-              },
-            });
-            if (signUpError) {
-              localStorage.setItem("mathchines.mock_auth", "true");
-              await supabase.auth.signInWithPassword({
-                email: parsed.data.email,
-                password: parsed.data.password,
-              });
-              toast.success("Signed in as Demo Learner (Mock Mode)!");
-              navigate({ to: "/learn" });
-              return;
-            }
-            toast.success("Demo account initialized!");
-            navigate({ to: "/learn" });
-            return;
-          }
-
           toast.error(
             error.message.toLowerCase().includes("invalid")
               ? "Invalid email or password."
@@ -209,75 +182,6 @@ function AuthPage() {
     }
   }
 
-  async function handleDemoLogin() {
-    setLoading(true);
-    const demoEmail = "demo@mathchines.com";
-    const demoPassword = "password123";
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    setMode("signin");
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: demoEmail,
-        password: demoPassword,
-      });
-
-      if (error) {
-        if (
-          error.message.toLowerCase().includes("invalid") ||
-          error.message.toLowerCase().includes("not found")
-        ) {
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: demoEmail,
-            password: demoPassword,
-            options: {
-              data: { display_name: "Demo Learner" },
-            },
-          });
-
-          if (signUpError) {
-            console.warn("Supabase signup failed, falling back to mock auth:", signUpError);
-            localStorage.setItem("mathchines.mock_auth", "true");
-            await supabase.auth.signInWithPassword({
-              email: demoEmail,
-              password: demoPassword,
-            });
-            toast.success("Signed in as Demo Learner (Mock Mode)!");
-            navigate({ to: "/learn" });
-            return;
-          }
-          toast.success("Welcome! Demo account initialized.");
-          navigate({ to: "/learn" });
-          return;
-        }
-
-        console.warn("Supabase signin error, falling back to mock auth:", error);
-        localStorage.setItem("mathchines.mock_auth", "true");
-        await supabase.auth.signInWithPassword({
-          email: demoEmail,
-          password: demoPassword,
-        });
-        toast.success("Signed in as Demo Learner (Mock Mode)!");
-        navigate({ to: "/learn" });
-        return;
-      }
-
-      toast.success("Signed in with demo account!");
-      navigate({ to: "/learn" });
-    } catch (err) {
-      console.warn("Demo login handler caught exception, falling back to mock:", err);
-      localStorage.setItem("mathchines.mock_auth", "true");
-      await supabase.auth.signInWithPassword({
-        email: demoEmail,
-        password: demoPassword,
-      });
-      toast.success("Signed in as Demo Learner (Mock Mode)!");
-      navigate({ to: "/learn" });
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleGoogle() {
     setLoading(true);
@@ -545,46 +449,13 @@ function AuthPage() {
               onClick={() => {
                 const nextMode = mode === "signin" ? "signup" : "signin";
                 setMode(nextMode);
-                if (nextMode === "signup") {
-                  setPassword("");
-                } else {
-                  setPassword("password123");
-                }
+                setPassword("");
               }}
               className="font-medium text-primary hover:underline"
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>
           </p>
-
-          <div className="mt-6 rounded-xl border border-dashed border-primary/20 bg-primary/5 p-4 text-center">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-primary">
-              Demo Credentials
-            </h3>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Quick access to experience Mathchines as a test user
-            </p>
-            <div className="mt-2.5 flex flex-col gap-1 text-xs font-mono">
-              <div className="flex justify-between px-2">
-                <span className="text-muted-foreground">Email:</span>
-                <span className="font-semibold text-foreground select-all">
-                  demo@mathchines.com
-                </span>
-              </div>
-              <div className="flex justify-between px-2">
-                <span className="text-muted-foreground">Password:</span>
-                <span className="font-semibold text-foreground select-all">password123</span>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              disabled={loading}
-              className="mt-3 flex w-full items-center justify-center gap-1 rounded-lg bg-primary/10 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/15 disabled:opacity-50"
-            >
-              Quick Demo Sign-in <ArrowRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
         </div>
       </div>
     </div>

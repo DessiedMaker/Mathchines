@@ -9,7 +9,7 @@ export interface Progress {
   xp: number;
   streak: number;
   lastActiveDay?: string;
-  role?: "student" | "teacher" | "parent";
+  role?: "student" | "parent";
 }
 
 const empty: Progress = { mastered: [], xp: 0, streak: 0 };
@@ -97,7 +97,7 @@ export function setSelection(country: string, grade: string) {
   write(p);
 }
 
-export function setRole(role: "student" | "teacher" | "parent") {
+export function setRole(role: "student" | "parent") {
   const p = read();
   p.role = role;
   write(p);

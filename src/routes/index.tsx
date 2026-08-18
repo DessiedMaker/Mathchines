@@ -366,19 +366,9 @@ function Personas() {
 function ForGrownups() {
   const items = [
     {
-      icon: Users,
-      t: "Teachers",
-      d: "Assign topics, view class analytics, and push Instant Reviews on shared Trouble Spots.",
-    },
-    {
       icon: BookOpen,
       t: "Parents",
       d: "Weekly SMS/WhatsApp reports and a dashboard to follow real progress, not just scores.",
-    },
-    {
-      icon: Zap,
-      t: "Schools",
-      d: "Bulk seat licences with full teacher tools, mock exams, and class-level mastery tracking.",
     },
   ];
   return (
@@ -393,7 +383,7 @@ function ForGrownups() {
               Real visibility for the people who care most.
             </h2>
             <p className="mt-4 max-w-lg text-muted-foreground">
-              Mathchines gives teachers, parents, and schools the tools to support every learner —
+              Mathchines gives parents the tools to support every learner —
               without getting in the way of the learning itself.
             </p>
           </div>
@@ -441,21 +431,6 @@ const TIERS = [
     cta: "Go Premium",
     highlight: true,
   },
-  {
-    name: "School",
-    price: "Custom",
-    sub: "Per seat / year",
-    blurb: "For classrooms and districts that mean business.",
-    features: [
-      "Bulk seat licences",
-      "Teacher dashboard",
-      "Class analytics",
-      "Mock exams",
-      "Priority support",
-    ],
-    cta: "Talk to us",
-    highlight: false,
-  },
 ];
 
 function Pricing() {
@@ -473,7 +448,7 @@ function Pricing() {
             Pay monthly, or a few cents a day via mobile airtime. Whatever works where you are.
           </p>
         </div>
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+        <div className="mt-14 grid gap-6 lg:grid-cols-2 lg:max-w-4xl lg:mx-auto">
           {TIERS.map((t) => (
             <div
               key={t.name}

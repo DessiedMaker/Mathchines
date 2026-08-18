@@ -26,8 +26,8 @@ export const Route = createFileRoute("/learn")({
   component: LearnLayout,
 });
 
-function RoleSelection({ onSelect }: { onSelect: (r: "student" | "teacher" | "parent") => void }) {
-  const [selected, setSelected] = useState<"student" | "teacher" | "parent" | null>(null);
+function RoleSelection({ onSelect }: { onSelect: (r: "student" | "parent") => void }) {
+  const [selected, setSelected] = useState<"student" | "parent" | null>(null);
   const [saving, setSaving] = useState(false);
 
   async function handleConfirm() {
@@ -56,7 +56,7 @@ function RoleSelection({ onSelect }: { onSelect: (r: "student" | "teacher" | "pa
           </p>
         </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
           {[
             {
               id: "student",
@@ -64,13 +64,6 @@ function RoleSelection({ onSelect }: { onSelect: (r: "student" | "teacher" | "pa
               label: "Student",
               desc: "Choose topics, solve quizzes, build streaks, and earn badges.",
               accent: "bg-primary/10 text-primary border-primary/20",
-            },
-            {
-              id: "teacher",
-              icon: GraduationCap,
-              label: "Teacher",
-              desc: "Set up classrooms, invite students, and track class progress metrics.",
-              accent: "bg-coral/15 text-coral border-coral/20",
             },
             {
               id: "parent",
@@ -152,7 +145,7 @@ function getInitialUser(): User | null {
   return null;
 }
 
-function getInitialRole(): "student" | "teacher" | "parent" | null {
+function getInitialRole(): "student" | "parent" | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem("mathchines.progress.v1");
@@ -167,7 +160,7 @@ function getInitialRole(): "student" | "teacher" | "parent" | null {
 function LearnLayout() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(getInitialUser);
-  const [role, setRoleState] = useState<"student" | "teacher" | "parent" | null>(getInitialRole);
+  const [role, setRoleState] = useState<"student" | "parent" | null>(getInitialRole);
   const [checking, setChecking] = useState(() => !getInitialUser());
   const [isOnline, setIsOnline] = useState(true);
 
