@@ -168,6 +168,7 @@ function AuthPage() {
             toast.success("Signed in locally (Mock Mode)!");
             navigate({ to: "/learn" });
             return;
+          }
           toast.error(
             error.message.toLowerCase().includes("invalid")
               ? "Invalid email or password."
