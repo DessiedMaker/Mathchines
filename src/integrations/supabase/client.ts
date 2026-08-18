@@ -387,30 +387,10 @@ const mockSupabase = {
 // import { supabase } from "@/integrations/supabase/client";
 export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
   get(_, prop, receiver) {
-    const isMockMode =
-      typeof window !== "undefined" &&
-      (localStorage.getItem("mathchines.mock_auth") === "true" ||
-        !import.meta.env.VITE_SUPABASE_URL ||
-        !import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
-
-    if (isMockMode) {
-      if (prop === "auth") return mockAuth;
-      if (prop === "from") return mockSupabase.from;
-    }
-
     try {
       if (!_supabase) _supabase = createSupabaseClient();
-
-      // If client is mocked dummy object due to missing env variables
-      if (Object.keys(_supabase).length === 0) {
-        if (prop === "auth") return mockAuth;
-        if (prop === "from") return mockSupabase.from;
-      }
-
       return Reflect.get(_supabase, prop, receiver);
     } catch (err) {
-      if (prop === "auth") return mockAuth;
-      if (prop === "from") return mockSupabase.from;
       throw err;
     }
   },

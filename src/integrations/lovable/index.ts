@@ -15,6 +15,24 @@ export const lovable = {
       provider: "google" | "apple" | "microsoft" | "lovable",
       opts?: SignInOptions,
     ) => {
+      const isLocal =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        import.meta.env.DEV;
+
+      if (isLocal) {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: provider === "lovable" ? "google" : provider,
+          options: {
+            redirectTo: opts?.redirect_uri || `${window.location.origin}/learn`,
+          },
+        });
+        if (error) {
+          return { error };
+        }
+        return { redirected: true };
+      }
+
       const result = await lovableAuth.signInWithOAuth(provider, {
         redirect_uri: opts?.redirect_uri,
         extraParams: {
