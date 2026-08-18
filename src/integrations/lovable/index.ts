@@ -15,12 +15,9 @@ export const lovable = {
       provider: "google" | "apple" | "microsoft" | "lovable",
       opts?: SignInOptions,
     ) => {
-      const isLocal =
-        window.location.hostname === "localhost" ||
-        window.location.hostname === "127.0.0.1" ||
-        import.meta.env.DEV;
+      const isLovableSandbox = window.location.hostname.endsWith(".lovable.app");
 
-      if (isLocal) {
+      if (!isLovableSandbox) {
         const { error } = await supabase.auth.signInWithOAuth({
           provider: provider === "lovable" ? "google" : provider,
           options: {
