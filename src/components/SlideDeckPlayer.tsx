@@ -179,7 +179,7 @@ export function SlideDeckPlayer({
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: `${window.location.origin}${import.meta.env.BASE_URL}learn`,
     });
-    if (result.error) {
+    if ("error" in result && result.error) {
       toast.error("Google sign-in failed. Please try again.");
       setAuthLoading(false);
     }

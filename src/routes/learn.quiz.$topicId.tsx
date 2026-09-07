@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getTopic, type Difficulty, type Question, type Topic } from "@/lib/curriculum";
 import { addMastery, getProgress } from "@/lib/progress";
 import {
@@ -88,14 +88,17 @@ function QuizPage() {
     [history.length, finished, shuffled],
   );
 
-  if (finished || !current) {
-    const correctCount = history.filter((h) => h.correct).length;
-    const score = history.length === 0 ? 0 : correctCount / history.length;
-    const passed = score >= PASS_THRESHOLD;
-    if (passed && history.length > 0) {
-      // record mastery once on render
+  const correctCount = history.filter((h) => h.correct).length;
+  const score = history.length === 0 ? 0 : correctCount / history.length;
+  const passed = score >= PASS_THRESHOLD;
+
+  useEffect(() => {
+    if ((finished || !current) && passed && history.length > 0) {
       addMastery(topic.id, Math.round(score * 50));
     }
+  }, [finished, current, passed, history.length, topic.id, score]);
+
+  if (finished || !current) {
     return (
       <div className="mx-auto max-w-2xl text-center">
         <div

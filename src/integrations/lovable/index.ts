@@ -19,7 +19,8 @@ export const lovable = {
 
       if (!isLovableSandbox) {
         const { error } = await supabase.auth.signInWithOAuth({
-          provider: provider === "lovable" ? "google" : provider,
+          provider:
+            provider === "lovable" ? "google" : provider === "microsoft" ? "azure" : provider,
           options: {
             redirectTo: opts?.redirect_uri || `${window.location.origin}/learn`,
           },

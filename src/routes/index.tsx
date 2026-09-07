@@ -383,8 +383,8 @@ function ForGrownups() {
               Real visibility for the people who care most.
             </h2>
             <p className="mt-4 max-w-lg text-muted-foreground">
-              Mathchines gives parents the tools to support every learner —
-              without getting in the way of the learning itself.
+              Mathchines gives parents the tools to support every learner — without getting in the
+              way of the learning itself.
             </p>
           </div>
           <ul className="space-y-4">

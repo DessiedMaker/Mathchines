@@ -224,8 +224,8 @@ class MockQueryBuilder {
           role: "student",
           xp: 350,
           streak: 5,
-          mastered_topics: ["fractions-intro"]
-        }
+          mastered_topics: ["fractions-intro"],
+        },
       ];
     } else if (tableName === "classrooms") {
       this.queryData = [
@@ -233,8 +233,8 @@ class MockQueryBuilder {
           id: "mock-class-id",
           name: "Demo Math Class",
           code: "DEMO101",
-          grades: { label: "JHS 1" }
-        }
+          grades: { label: "JHS 1" },
+        },
       ];
     } else if (tableName === "classroom_enrollments") {
       this.queryData = [
@@ -245,10 +245,10 @@ class MockQueryBuilder {
             name: "Demo Math Class",
             code: "DEMO101",
             profiles: {
-              display_name: "Demo Teacher"
-            }
-          }
-        }
+              display_name: "Demo Teacher",
+            },
+          },
+        },
       ];
     } else if (tableName === "parent_student_links") {
       this.queryData = [
@@ -260,9 +260,9 @@ class MockQueryBuilder {
             email: "student@demo.com",
             xp: 350,
             streak: 5,
-            mastered_topics: ["fractions-intro"]
-          }
-        }
+            mastered_topics: ["fractions-intro"],
+          },
+        },
       ];
     } else {
       this.queryData = [];
@@ -308,8 +308,8 @@ class MockQueryBuilder {
           id: "mock-class-id",
           name: "Demo Math Class",
           code: value.toUpperCase(),
-          grades: { label: "JHS 1" }
-        }
+          grades: { label: "JHS 1" },
+        },
       ];
     }
     if (this.tableName === "profiles" && column === "display_name" && typeof value === "string") {
@@ -321,8 +321,8 @@ class MockQueryBuilder {
           role: "student",
           xp: 350,
           streak: 5,
-          mastered_topics: ["fractions-intro"]
-        }
+          mastered_topics: ["fractions-intro"],
+        },
       ];
     }
     return this;
